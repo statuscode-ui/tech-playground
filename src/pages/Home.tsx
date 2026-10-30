@@ -2,6 +2,7 @@ import { ArrowRight, House, Leaf, MapPin, Quote, Sparkles, Star } from 'lucide-r
 import { Link } from 'react-router-dom';
 import { InstagramIcon } from '../components/BrandIcons';
 import { ProductCard, ServiceCard } from '../components/Cards';
+import HeroVideo from '../components/HeroVideo';
 import { FaqList } from './Faq';
 import { BookingNote, LoadingState, SectionHeading, SpaImage, WhatsAppLink } from '../components/ui';
 import { useSiteData } from '../data/SiteData';
@@ -36,10 +37,11 @@ export default function Home() {
           </div>
           <div className="relative mx-auto w-full max-w-md lg:max-w-none">
             <div className="absolute -inset-3 -z-0 rounded-[2.5rem] border border-gold/40" aria-hidden />
-            <SpaImage
-              src="/images/hot-stone.webp"
-              alt="Guest relaxing during a hot stone massage"
-              eager
+            <HeroVideo
+              src="/videos/massage.mp4"
+              poster="/images/massage-poster.webp"
+              label="A Serenity Haven Spa therapist giving a guest a relaxing back massage"
+              caption="Your body holds stress. Let us help you release it."
               className="relative aspect-[4/5] w-full rounded-[2rem] shadow-xl"
             />
             {settings.homeServiceEnabled && (
