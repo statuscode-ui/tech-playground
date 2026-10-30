@@ -1,0 +1,157 @@
+rules_version = '2';
+
+// Access model
+// - Visitors can read only published business content and the public settings document.
+// - Visitors can create an enquiry (validated). They cannot read, change or delete enquiries.
+// - Only administrators (users with a document at admins/{uid}) can manage content.
+// - Nobody can create or change admin documents from the website; that is done in the
+//   Firebase console (see README), so a visitor can never make themselves an admin.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function str(field, min, max) {
+      return field is string && field.size() >= min && field.size() <= max;
+    }
+
+    function optStr(data, key, max) {
+      return !(key in data) || str(data[key], 0, max);
+    }
+
+    function priceOrNull(v) {
+      return v == null || ((v is int || v is float) && v >= 0 && v < 1000000);
+    }
+
+    function timestampsOk(data) {
+      return (!('updatedAt' in data) || data.updatedAt == request.time)
+        && (!('createdAt' in data) || data.createdAt is timestamp);
+    }
+
+    function commonContent(d) {
+      return d.published is bool
+        && (!('order' in d) || d.order is int || d.order is float)
+        && (!('featured' in d) || d.featured is bool)
+        && optStr(d, 'imageUrl', 2000)
+        && optStr(d, 'imageAlt', 200)
+        && timestampsOk(d);
+    }
+
+    // ---- Admin records: readable only by their owner, never writable from clients ----
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // ---- Public business profile ----
+    match /settings/{docId} {
+      allow read: if docId == 'site';
+      allow write: if isAdmin() && docId == 'site'
+        && str(request.resource.data.spaName, 1, 80)
+        && request.resource.data.whatsappNumber is string
+        && request.resource.data.whatsappNumber.matches('^[1-9][0-9]{7,14}$')
+        && str(request.resource.data.currencySymbol, 1, 6)
+        && request.resource.data.openingHours is list
+        && request.resource.data.openingHours.size() <= 14
+        && request.resource.data.social is map
+        && request.resource.data.homeServiceEnabled is bool
+        && request.resource.data.size() <= 40
+        && timestampsOk(request.resource.data);
+    }
+
+    match /services/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin()
+        && str(request.resource.data.name, 1, 100)
+        && str(request.resource.data.slug, 1, 80)
+        && str(request.resource.data.category, 1, 60)
+        && str(request.resource.data.description, 1, 2000)
+        && request.resource.data.options is list
+        && request.resource.data.options.size() >= 1
+        && request.resource.data.options.size() <= 10
+        && request.resource.data.available is bool
+        && optStr(request.resource.data, 'preparation', 2000)
+        && optStr(request.resource.data, 'aftercare', 2000)
+        && commonContent(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /products/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin()
+        && str(request.resource.data.name, 1, 100)
+        && str(request.resource.data.slug, 1, 80)
+        && str(request.resource.data.category, 1, 60)
+        && str(request.resource.data.description, 1, 2000)
+        && priceOrNull(request.resource.data.price)
+        && priceOrNull(request.resource.data.promoPrice)
+        && request.resource.data.stockStatus in ['in_stock', 'low_stock', 'out_of_stock', 'preorder']
+        && optStr(request.resource.data, 'size', 60)
+        && optStr(request.resource.data, 'usage', 2000)
+        && optStr(request.resource.data, 'ingredients', 2000)
+        && commonContent(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /faqs/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin()
+        && str(request.resource.data.question, 1, 200)
+        && str(request.resource.data.answer, 1, 2000)
+        && optStr(request.resource.data, 'category', 60)
+        && commonContent(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /promotions/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin()
+        && str(request.resource.data.title, 1, 100)
+        && str(request.resource.data.description, 1, 500)
+        && str(request.resource.data.startDate, 0, 10)
+        && str(request.resource.data.endDate, 0, 10)
+        && request.resource.data.published is bool
+        && timestampsOk(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /testimonials/{id} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin()
+        && str(request.resource.data.name, 1, 60)
+        && str(request.resource.data.quote, 1, 800)
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+        && commonContent(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // ---- Contact-form enquiries: write-only for visitors, private to admins ----
+    match /enquiries/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['name', 'contact', 'subject', 'message', 'consent', 'status', 'createdAt'])
+        && request.resource.data.keys().hasAll(['name', 'contact', 'message', 'consent', 'status', 'createdAt'])
+        && str(request.resource.data.name, 2, 80)
+        && str(request.resource.data.contact, 5, 120)
+        && optStr(request.resource.data, 'subject', 120)
+        && str(request.resource.data.message, 5, 1500)
+        && request.resource.data.consent == true
+        && request.resource.data.status == 'new'
+        && request.resource.data.createdAt == request.time;
+      allow read, delete: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['new', 'handled'];
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
