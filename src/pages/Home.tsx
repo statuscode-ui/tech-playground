@@ -2,6 +2,7 @@ import { ArrowRight, House, Leaf, MapPin, Quote, Sparkles, Star } from 'lucide-r
 import { Link } from 'react-router-dom';
 import { InstagramIcon } from '../components/BrandIcons';
 import { ProductCard, ServiceCard } from '../components/Cards';
+import HeroBackdrop from '../components/HeroBackdrop';
 import { FaqList } from './Faq';
 import { BookingNote, LoadingState, SectionHeading, SpaImage, WhatsAppLink } from '../components/ui';
 import { useSiteData } from '../data/SiteData';
@@ -22,7 +23,8 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-sand via-cream to-sage-soft/60" aria-hidden />
         <div className="container-page relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:py-24">
-          <div className="fade-up">
+          <div className="fade-up relative isolate">
+            <HeroBackdrop />
             <p className="eyebrow">Welcome to {settings.spaName}</p>
             <h1 className="mt-4 text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">{settings.tagline || 'Relax, restore, rejuvenate.'}</h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">{settings.intro}</p>
