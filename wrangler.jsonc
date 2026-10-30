@@ -1,0 +1,11 @@
+// Cloudflare Workers config: serves the built site from dist/ as static assets.
+// Used when the repo is connected via Workers & Pages → Create application → Import a repository.
+{
+  "name": "serenity-haven-spa",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./dist",
+    // Send deep links like /treatments/facial to index.html so the app can route them.
+    "not_found_handling": "single-page-application"
+  }
+}

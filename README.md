@@ -140,7 +140,8 @@ Firebase Hosting needs the CLI on a computer. To manage everything from a phone,
 2. **Security rules:** open [`firestore.rules`](firestore.rules) on GitHub, tap **Raw**, and copy everything. In Firebase, go to Firestore Database → **Rules**, replace the text, and tap **Publish**.
 3. **Cloudflare:** at <https://dash.cloudflare.com> sign up, then go to **Workers & Pages → Create → Pages → Connect to Git**. Authorise GitHub and choose this repository. An owner of the `statuscode-ui` organisation may need to approve access.
    - Production branch: `main`. Framework preset: **None**. Build command: `npm run build`. Build output directory: `dist`.
-4. Once it's live at `https://<name>.pages.dev`, go to Firebase → Authentication → Settings → **Authorized domains → Add domain** and add `<name>.pages.dev`. Without this, admin sign-in fails.
+   - If the dashboard only offers **Create application** (Workers), choose **Import a repository** instead. Use build command `npm run build` and deploy command `npx wrangler deploy`. `wrangler.jsonc` serves `dist/` with single-page-app routing, and the site is published at `https://serenity-haven-spa.<account>.workers.dev`.
+4. Once it's live at `https://<name>.pages.dev` (or `….workers.dev`), go to Firebase → Authentication → Settings → **Authorized domains → Add domain** and add `<name>.pages.dev`. Without this, admin sign-in fails.
 5. The Firebase web config comes from a committed `.env.production` file (the values are public identifiers, not secrets), so Cloudflare needs no environment variables.
 
 ### Custom domain
