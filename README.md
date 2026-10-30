@@ -132,6 +132,17 @@ The site is served at `https://<project-id>.web.app`. `firebase.json` rewrites a
 
 Before the first deploy, replace `serenity-haven-spa.web.app` in `public/robots.txt`, `public/sitemap.xml` and `VITE_SITE_URL` with your real URL.
 
+### Alternative: set up and publish from a phone (Cloudflare Pages)
+
+Firebase Hosting needs the CLI on a computer. To manage everything from a phone, host the site on **Cloudflare Pages** (free) and keep Firebase for the database and admin login. Cloudflare rebuilds the site automatically whenever `main` changes. `public/_headers` sets caching and security headers, and deep links work because the site has no `404.html`.
+
+1. Do the Firebase setup steps above in the phone browser. In Chrome, turn on ⋮ → **Desktop site**.
+2. **Security rules:** open [`firestore.rules`](firestore.rules) on GitHub, tap **Raw**, and copy everything. In Firebase, go to Firestore Database → **Rules**, replace the text, and tap **Publish**.
+3. **Cloudflare:** at <https://dash.cloudflare.com> sign up, then go to **Workers & Pages → Create → Pages → Connect to Git**. Authorise GitHub and choose this repository. An owner of the `statuscode-ui` organisation may need to approve access.
+   - Production branch: `main`. Framework preset: **None**. Build command: `npm run build`. Build output directory: `dist`.
+4. Once it's live at `https://<name>.pages.dev`, go to Firebase → Authentication → Settings → **Authorized domains → Add domain** and add `<name>.pages.dev`. Without this, admin sign-in fails.
+5. The Firebase web config comes from a committed `.env.production` file (the values are public identifiers, not secrets), so Cloudflare needs no environment variables.
+
 ### Custom domain
 
 Hosting → **Add custom domain**, then add the DNS records it shows at your domain registrar. SSL is issued automatically. Afterwards, update `VITE_SITE_URL`, the sitemap, robots.txt, the reCAPTCHA allowed domains, and **Authentication → Settings → Authorized domains**.
