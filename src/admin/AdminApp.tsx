@@ -74,18 +74,20 @@ function Login() {
   );
 }
 
-const NAV = [
-  { to: '', label: 'Overview', Icon: LayoutDashboard, end: true },
-  { to: 'treatments', label: 'Treatments', Icon: Sparkles },
-  { to: 'products', label: 'Products', Icon: Package },
-  { to: 'promotions', label: 'Promotions', Icon: Tag },
-  { to: 'faqs', label: 'FAQs', Icon: Gift },
-  { to: 'testimonials', label: 'Testimonials', Icon: MessageSquareQuote },
-  { to: 'enquiries', label: 'Enquiries', Icon: Inbox },
-  { to: 'settings', label: 'Settings', Icon: Settings },
+// Absolute paths: relative links inside the /admin/* splat route resolve against the
+// current page (e.g. /admin/treatments/products), which matches nothing.
+export const ADMIN_NAV = [
+  { to: '/admin', label: 'Overview', Icon: LayoutDashboard, end: true },
+  { to: '/admin/treatments', label: 'Treatments', Icon: Sparkles },
+  { to: '/admin/products', label: 'Products', Icon: Package },
+  { to: '/admin/promotions', label: 'Promotions', Icon: Tag },
+  { to: '/admin/faqs', label: 'FAQs', Icon: Gift },
+  { to: '/admin/testimonials', label: 'Testimonials', Icon: MessageSquareQuote },
+  { to: '/admin/enquiries', label: 'Enquiries', Icon: Inbox },
+  { to: '/admin/settings', label: 'Settings', Icon: Settings },
 ];
 
-function Dashboard({ user }: { user: User }) {
+export function Dashboard({ user }: { user: User }) {
   return (
     <div className="min-h-screen bg-cream">
       <header className="sticky top-0 z-30 border-b border-linen bg-ivory/95 backdrop-blur">
@@ -102,7 +104,7 @@ function Dashboard({ user }: { user: User }) {
           </div>
         </div>
         <nav aria-label="Dashboard" className="container-page -mb-px flex gap-1 overflow-x-auto pb-2">
-          {NAV.map(({ to, label, Icon, end }) => (
+          {ADMIN_NAV.map(({ to, label, Icon, end }) => (
             <NavLink
               key={label}
               to={to}
@@ -124,7 +126,7 @@ function Dashboard({ user }: { user: User }) {
           <Route path="testimonials" element={<TestimonialsAdmin />} />
           <Route path="enquiries" element={<Enquiries />} />
           <Route path="settings" element={<SettingsEditor />} />
-          <Route path="*" element={<Navigate to="" replace />} />
+          <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
       </main>
     </div>

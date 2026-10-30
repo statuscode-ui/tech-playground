@@ -89,12 +89,12 @@ export default function Overview() {
 
   const tiles: { label: string; value: string; to: string }[] = stats
     ? [
-        { label: 'Treatments published', value: `${stats.publishedServices} / ${stats.services}`, to: 'treatments' },
-        { label: 'Products published', value: `${stats.publishedProducts} / ${stats.products}`, to: 'products' },
-        { label: 'Promotions running', value: String(stats.activePromotions), to: 'promotions' },
-        { label: 'Published FAQs', value: String(stats.faqs), to: 'faqs' },
-        { label: 'Published testimonials', value: String(stats.testimonials), to: 'testimonials' },
-        { label: 'New enquiries', value: `${stats.newEnquiries} (of ${stats.totalEnquiries})`, to: 'enquiries' },
+        { label: 'Treatments published', value: `${stats.publishedServices} / ${stats.services}`, to: '/admin/treatments' },
+        { label: 'Products published', value: `${stats.publishedProducts} / ${stats.products}`, to: '/admin/products' },
+        { label: 'Promotions running', value: String(stats.activePromotions), to: '/admin/promotions' },
+        { label: 'Published FAQs', value: String(stats.faqs), to: '/admin/faqs' },
+        { label: 'Published testimonials', value: String(stats.testimonials), to: '/admin/testimonials' },
+        { label: 'New enquiries', value: `${stats.newEnquiries} (of ${stats.totalEnquiries})`, to: '/admin/enquiries' },
       ]
     : [];
 
