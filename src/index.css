@@ -92,3 +92,80 @@
     transform: none;
   }
 }
+
+/* Home page hero backdrop (src/components/HeroBackdrop.tsx).
+   Animations only run when the visitor hasn't asked for reduced motion. */
+.hero-petal {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-orb-a {
+    animation: hero-drift-a 22s ease-in-out infinite alternate;
+  }
+  .hero-orb-b {
+    animation: hero-drift-b 26s ease-in-out infinite alternate;
+  }
+  .hero-orb-c {
+    animation: hero-drift-c 19s ease-in-out infinite alternate;
+  }
+  .hero-sway {
+    transform-origin: 50% 100%;
+    animation: hero-sway 9s ease-in-out infinite alternate;
+  }
+  .hero-sway-slow {
+    transform-origin: 50% 100%;
+    animation: hero-sway 12s ease-in-out infinite alternate-reverse;
+  }
+  .hero-petal {
+    animation-name: hero-rise;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Show a few petals resting in place instead of floating. */
+  .hero-petal:nth-child(odd) {
+    opacity: 0.6;
+    transform: translateY(-120px);
+  }
+}
+@keyframes hero-drift-a {
+  to {
+    transform: translate(60px, 40px) scale(1.15);
+  }
+}
+@keyframes hero-drift-b {
+  to {
+    transform: translate(-70px, -30px) scale(0.9);
+  }
+}
+@keyframes hero-drift-c {
+  to {
+    transform: translate(50px, -45px) scale(1.1);
+  }
+}
+@keyframes hero-sway {
+  from {
+    transform: rotate(-4deg);
+  }
+  to {
+    transform: rotate(4deg);
+  }
+}
+@keyframes hero-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  12% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--drift, 16px), -420px) rotate(220deg);
+  }
+}
