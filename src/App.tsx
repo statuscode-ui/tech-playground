@@ -8,6 +8,7 @@ import Faq from './pages/Faq';
 import Home from './pages/Home';
 import { Privacy, Terms } from './pages/Legal';
 import NotFound from './pages/NotFound';
+import RouteError from './pages/RouteError';
 import Products, { ProductDetail } from './pages/Products';
 import Services, { ServiceDetail } from './pages/Services';
 
@@ -17,6 +18,7 @@ const AdminApp = lazy(() => import('./admin/AdminApp'));
 const router = createBrowserRouter([
   {
     element: <Layout />,
+    errorElement: <RouteError />,
     children: [
       { path: '/', element: <Home /> },
       { path: '/treatments', element: <Services /> },
@@ -32,6 +34,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/admin/*',
+    errorElement: <RouteError />,
     element: (
       <Suspense fallback={<LoadingState label="Loading dashboard…" />}>
         <AdminApp />

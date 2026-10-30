@@ -32,7 +32,9 @@ function Header() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const { promotions } = useSiteData();
-  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-full px-3 py-2 text-sm tracking-wide transition ${isActive ? 'text-forest font-medium' : 'text-muted hover:text-forest'}`;
@@ -186,7 +188,11 @@ function WhatsAppFab() {
 export default function Layout() {
   const { error } = useSiteData();
   const { pathname } = useLocation();
-  useEffect(() => window.scrollTo(0, 0), [pathname]);
+  // Block body: scrollTo() returns a Promise in newer browsers, and React treats any
+  // returned value as a cleanup function (crashing with "destroy is not a function").
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <div className="flex min-h-screen flex-col">
