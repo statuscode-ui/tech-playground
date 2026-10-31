@@ -96,7 +96,7 @@ export default function ChatWidget() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="fixed right-4 bottom-24 z-40 inline-flex h-12 items-center gap-2 rounded-full bg-ivory px-4 text-sm font-medium text-espresso shadow-lg ring-1 ring-linen transition hover:bg-white md:right-6"
+          className="fixed right-4 bottom-24 z-40 inline-flex h-12 items-center gap-2 rounded-full bg-ivory px-4 text-sm font-medium text-leaf shadow-lg ring-1 ring-linen transition hover:bg-white md:right-6"
         >
           <Bot className="h-5 w-5" aria-hidden />
           Ask us
@@ -108,7 +108,7 @@ export default function ChatWidget() {
           aria-label={aiAvailable ? 'Spa assistant chat' : 'Frequently asked questions chat'}
           className="fixed inset-x-2 bottom-2 z-50 flex max-h-[min(36rem,calc(100dvh-1rem))] flex-col overflow-hidden rounded-2xl border border-linen bg-ivory shadow-2xl sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-96"
         >
-          <header className="flex items-center justify-between bg-espresso px-4 py-3 text-white">
+          <header className="flex items-center justify-between bg-leaf px-4 py-3 text-white">
             <div>
               <p className="font-display text-lg leading-tight">{settings.spaName}</p>
               <p className="text-xs text-white/75">{aiAvailable ? 'AI assistant · answers may be imperfect' : 'Automatic FAQ answers'}</p>
@@ -124,7 +124,7 @@ export default function ChatWidget() {
             {messages.length === 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {SUGGESTIONS.map((s) => (
-                  <button key={s} type="button" onClick={() => void send(s)} className="rounded-full border border-linen bg-white px-3 py-1.5 text-xs text-espresso hover:border-espresso/40">
+                  <button key={s} type="button" onClick={() => void send(s)} className="rounded-full border border-linen bg-white px-3 py-1.5 text-xs text-leaf hover:border-leaf/40">
                     {s}
                   </button>
                 ))}
@@ -143,7 +143,7 @@ export default function ChatWidget() {
                 {m.suggestions && i === messages.length - 1 && !busy && (
                   <div className="flex flex-wrap gap-2 pt-2">
                     {m.suggestions.map((sug) => (
-                      <button key={sug} type="button" onClick={() => void send(sug)} className="rounded-full border border-linen bg-white px-3 py-1.5 text-xs text-espresso hover:border-espresso/40">
+                      <button key={sug} type="button" onClick={() => void send(sug)} className="rounded-full border border-linen bg-white px-3 py-1.5 text-xs text-leaf hover:border-leaf/40">
                         {sug}
                       </button>
                     ))}
@@ -192,7 +192,7 @@ function Bubble({ role, children }: { role: 'user' | 'assistant'; children: stri
   return (
     <p
       className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-line ${
-        role === 'user' ? 'ml-auto rounded-br-md bg-espresso text-white' : 'rounded-bl-md bg-sand text-ink'
+        role === 'user' ? 'ml-auto rounded-br-md bg-leaf text-white' : 'rounded-bl-md bg-meadow text-ink'
       }`}
     >
       {children}

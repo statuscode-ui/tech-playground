@@ -9,11 +9,11 @@ export function SpaImage({ src, alt, className = '', eager = false }: { src: str
   if (!src)
     return (
       <div
-        className={`flex items-center justify-center bg-gradient-to-br from-almond via-sand to-gold-soft ${className}`}
+        className={`flex items-center justify-center bg-gradient-to-br from-mint via-meadow to-berry-soft ${className}`}
         role="img"
         aria-label={alt || 'Image coming soon'}
       >
-        <Flower2 className="h-10 w-10 text-espresso/40" aria-hidden />
+        <Flower2 className="h-10 w-10 text-leaf/40" aria-hidden />
       </div>
     );
   return (
@@ -34,13 +34,13 @@ export function Price({ price, promoPrice, className = '' }: { price: number | n
   if (promoPrice != null && promoPrice < price)
     return (
       <span className={className}>
-        <span className="font-medium text-espresso">{formatPrice(promoPrice, cur)}</span>{' '}
+        <span className="font-medium text-leaf">{formatPrice(promoPrice, cur)}</span>{' '}
         <s className="text-sm text-muted" aria-label={`was ${formatPrice(price, cur)}`}>
           {formatPrice(price, cur)}
         </s>
       </span>
     );
-  return <span className={`font-medium text-espresso ${className}`}>{formatPrice(price, cur)}</span>;
+  return <span className={`font-medium text-leaf ${className}`}>{formatPrice(price, cur)}</span>;
 }
 
 export function WhatsAppLink({
@@ -90,11 +90,11 @@ export function SectionHeading({ eyebrow, title, intro, align = 'center' }: { ey
 
 export function PageHeader({ eyebrow, title, intro }: { eyebrow?: string; title: string; intro?: string }) {
   return (
-    <header className="under-header border-b border-linen/60 bg-gradient-to-b from-sand/70 to-cream">
+    <header className="under-header border-b border-linen/60 bg-gradient-to-b from-meadow/70 to-cream">
       <div className="container-page py-14 text-center sm:py-20">
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
         <h1 className="mt-3 text-4xl sm:text-5xl">{title}</h1>
-        <div className="gold-rule mt-6" />
+        <div className="accent-rule mt-6" />
         {intro && <p className="mx-auto mt-6 max-w-2xl leading-relaxed text-muted">{intro}</p>}
       </div>
     </header>
@@ -113,7 +113,7 @@ export function LoadingState({ label = 'Loading…' }: { label?: string }) {
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="card mx-auto max-w-lg p-8 text-center">
-      <Flower2 className="mx-auto h-8 w-8 text-taupe" aria-hidden />
+      <Flower2 className="mx-auto h-8 w-8 text-sage" aria-hidden />
       <h3 className="mt-3 text-2xl">{title}</h3>
       {children && <div className="mt-2 text-sm text-muted">{children}</div>}
     </div>

@@ -10,7 +10,7 @@ export function FaqList({ faqs }: { faqs: FaqT[] }) {
     <div className="divide-y divide-linen rounded-2xl border border-linen bg-ivory">
       {faqs.map((f) => (
         <details key={f.id} className="group p-5 [&_summary::-webkit-details-marker]:hidden">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-espresso">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-leaf">
             {f.question}
             <ChevronDown className="h-4 w-4 shrink-0 transition group-open:rotate-180" aria-hidden />
           </summary>

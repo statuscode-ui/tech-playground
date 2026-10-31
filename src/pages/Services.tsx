@@ -21,7 +21,7 @@ export function CategoryChips({ categories, value, onChange, label }: { categori
             type="button"
             aria-pressed={active}
             onClick={() => onChange(c === 'All' ? '' : c)}
-            className={`min-h-10 rounded-full border px-4 text-sm transition ${active ? 'border-espresso bg-espresso text-white' : 'border-linen bg-ivory text-ink hover:border-espresso/40'}`}
+            className={`min-h-10 rounded-full border px-4 text-sm transition ${active ? 'border-leaf bg-leaf text-white' : 'border-linen bg-ivory text-ink hover:border-leaf/40'}`}
           >
             {c}
           </button>
@@ -92,7 +92,7 @@ export function ServiceDetail() {
 
   return (
     <article className="container-page py-10 sm:py-14">
-      <Link to="/treatments" className="inline-flex items-center gap-1 text-sm text-muted hover:text-espresso">
+      <Link to="/treatments" className="inline-flex items-center gap-1 text-sm text-muted hover:text-leaf">
         <ArrowLeft className="h-4 w-4" aria-hidden /> All treatments
       </Link>
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
@@ -101,7 +101,7 @@ export function ServiceDetail() {
           <p className="eyebrow">{service.category}</p>
           <h1 className="mt-3 text-4xl sm:text-5xl">{service.name}</h1>
           <p className="mt-5 leading-relaxed text-muted">{service.description}</p>
-          {!service.available && <p className="badge mt-4 bg-sand text-muted">Currently unavailable</p>}
+          {!service.available && <p className="badge mt-4 bg-meadow text-muted">Currently unavailable</p>}
 
           <h2 className="mt-8 text-2xl">Prices</h2>
           <ul className="mt-3 divide-y divide-linen rounded-2xl border border-linen bg-ivory">
@@ -141,7 +141,7 @@ export function ServiceDetail() {
             </section>
           )}
           {settings.homeServiceEnabled && settings.homeServiceNote && (
-            <p className="mt-8 rounded-2xl bg-almond/60 p-4 text-sm leading-relaxed text-espresso">{settings.homeServiceNote}</p>
+            <p className="mt-8 rounded-2xl bg-mint/60 p-4 text-sm leading-relaxed text-leaf">{settings.homeServiceNote}</p>
           )}
         </div>
       </div>

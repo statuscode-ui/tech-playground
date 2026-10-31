@@ -21,7 +21,7 @@ export function ServiceCard({ service }: { service: Service }) {
       <div className="flex flex-1 flex-col p-5">
         <p className="eyebrow">{service.category}</p>
         <h3 className="mt-2 text-2xl">
-          <Link to={`/treatments/${service.slug}`} className="hover:underline hover:decoration-gold/60 hover:underline-offset-4">
+          <Link to={`/treatments/${service.slug}`} className="hover:underline hover:decoration-berry/60 hover:underline-offset-4">
             {service.name}
           </Link>
         </h3>
@@ -50,7 +50,7 @@ export function ServiceCard({ service }: { service: Service }) {
               Book on WhatsApp
             </WhatsAppLink>
           ) : (
-            <span className="badge bg-sand text-muted">Currently unavailable</span>
+            <span className="badge bg-meadow text-muted">Currently unavailable</span>
           )}
           <Link to={`/treatments/${service.slug}`} className="btn-outline">
             Details<span className="sr-only"> about {service.name}</span>
@@ -62,10 +62,10 @@ export function ServiceCard({ service }: { service: Service }) {
 }
 
 const stockStyles: Record<string, string> = {
-  in_stock: 'bg-almond text-espresso',
-  low_stock: 'bg-gold-soft text-espresso',
-  out_of_stock: 'bg-sand text-muted',
-  preorder: 'bg-sand text-espresso',
+  in_stock: 'bg-mint text-leaf',
+  low_stock: 'bg-berry-soft text-leaf',
+  out_of_stock: 'bg-meadow text-muted',
+  preorder: 'bg-meadow text-leaf',
 };
 
 export function ProductCard({ product }: { product: Product }) {
@@ -81,7 +81,7 @@ export function ProductCard({ product }: { product: Product }) {
           <span className={`badge ${stockStyles[product.stockStatus]}`}>{STOCK_LABELS[product.stockStatus]}</span>
         </div>
         <h3 className="mt-2 text-xl">
-          <Link to={`/products/${product.slug}`} className="hover:underline hover:decoration-gold/60 hover:underline-offset-4">
+          <Link to={`/products/${product.slug}`} className="hover:underline hover:decoration-berry/60 hover:underline-offset-4">
             {product.name}
           </Link>
         </h3>
@@ -110,7 +110,7 @@ export function CategoryTile({ category, imageUrl, imageAlt, count }: { category
   return (
     <Link
       to={`/treatments?category=${encodeURIComponent(category)}`}
-      className="group block overflow-hidden rounded-2xl bg-espresso shadow-[0_10px_30px_-18px_rgba(46,36,32,0.6)] transition hover:-translate-y-0.5"
+      className="group block overflow-hidden rounded-2xl bg-leaf shadow-[0_10px_30px_-18px_rgba(20,61,37,0.6)] transition hover:-translate-y-0.5"
     >
       <SpaImage src={imageUrl} alt={imageAlt} className="aspect-square w-full transition duration-500 group-hover:scale-[1.04]" />
       <span className="label-caps flex items-center justify-between gap-2 px-4 py-4 text-white sm:px-5">
@@ -130,13 +130,13 @@ export function SignatureCard({ service, badge }: { service: Service; badge: str
   const from = startingPrice(service.options);
   const single = service.options.length === 1 ? service.options[0] : undefined;
   return (
-    <article className="flex flex-col overflow-hidden rounded-[1.75rem] bg-ivory shadow-[0_18px_40px_-24px_rgba(46,36,32,0.55)] ring-1 ring-linen/70">
+    <article className="flex flex-col overflow-hidden rounded-[1.75rem] bg-ivory shadow-[0_18px_40px_-24px_rgba(20,61,37,0.55)] ring-1 ring-linen/70">
       <div className="relative">
         <SpaImage src={service.imageUrl} alt={service.imageAlt} className="aspect-[4/3] w-full rounded-b-[1.75rem]" />
-        <span className="label-caps absolute top-4 left-4 rounded-full bg-espresso px-4 py-2 text-xs text-white">{badge}</span>
+        <span className="label-caps absolute top-4 left-4 rounded-full bg-leaf px-4 py-2 text-xs text-white">{badge}</span>
       </div>
       <div className="flex flex-1 flex-col p-6">
-        <h3 className="label-caps text-base text-espresso">{service.name}</h3>
+        <h3 className="label-caps text-base text-leaf">{service.name}</h3>
         <p className="mt-3 line-clamp-3 leading-relaxed text-muted">{service.description}</p>
         <p className="mt-4">
           {single ? (

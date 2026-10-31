@@ -100,7 +100,7 @@ function EnquiryForm() {
       </div>
       <div>
         <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" className="mt-1 h-4 w-4 accent-espresso" checked={form.consent} onChange={(e) => set('consent', e.target.checked)} {...field('consent')} />
+          <input type="checkbox" className="mt-1 h-4 w-4 accent-leaf" checked={form.consent} onChange={(e) => set('consent', e.target.checked)} {...field('consent')} />
           <span>
             I agree that the spa may use these details to reply to my enquiry. See our <Link to="/privacy" className="underline">privacy policy</Link>.
           </span>
@@ -140,24 +140,24 @@ export default function Contact() {
             <ul className="space-y-4 text-sm">
               {settings.phoneDisplay && (
                 <li className="flex gap-3">
-                  <Phone className="h-5 w-5 shrink-0 text-espresso" aria-hidden />
+                  <Phone className="h-5 w-5 shrink-0 text-leaf" aria-hidden />
                   <a href={`tel:+${settings.whatsappNumber}`} className="hover:underline">{settings.phoneDisplay}</a>
                 </li>
               )}
               {settings.email && (
                 <li className="flex gap-3">
-                  <Mail className="h-5 w-5 shrink-0 text-espresso" aria-hidden />
+                  <Mail className="h-5 w-5 shrink-0 text-leaf" aria-hidden />
                   <a href={`mailto:${settings.email}`} className="hover:underline">{settings.email}</a>
                 </li>
               )}
               {settings.address && (
                 <li className="flex gap-3">
-                  <MapPin className="h-5 w-5 shrink-0 text-espresso" aria-hidden />
+                  <MapPin className="h-5 w-5 shrink-0 text-leaf" aria-hidden />
                   <span>{settings.address}</span>
                 </li>
               )}
               <li className="flex gap-3">
-                <Clock className="h-5 w-5 shrink-0 text-espresso" aria-hidden />
+                <Clock className="h-5 w-5 shrink-0 text-leaf" aria-hidden />
                 {settings.openingHours.length ? (
                   <ul className="flex-1 space-y-1">
                     {settings.openingHours.map((h) => (
@@ -188,7 +188,7 @@ export default function Contact() {
             )}
           </div>
           {settings.homeServiceEnabled && settings.homeServiceNote && (
-            <div className="rounded-2xl bg-almond/60 p-6 text-sm leading-relaxed text-espresso">
+            <div className="rounded-2xl bg-mint/60 p-6 text-sm leading-relaxed text-leaf">
               <p className="font-display text-xl">Home service</p>
               <p className="mt-1">{settings.homeServiceNote}</p>
             </div>

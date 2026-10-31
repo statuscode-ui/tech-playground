@@ -37,10 +37,10 @@ export default function Home() {
           </h2>
           <div className="grid gap-4 md:grid-cols-2">
             {promotions.map((p) => (
-              <div key={p.id} className="card flex items-start gap-4 border-gold/40 bg-gradient-to-br from-ivory to-gold-soft/40 p-6">
-                <Sparkles className="mt-1 h-6 w-6 shrink-0 text-gold" aria-hidden />
+              <div key={p.id} className="card flex items-start gap-4 border-berry/40 bg-gradient-to-br from-ivory to-berry-soft/40 p-6">
+                <Sparkles className="mt-1 h-6 w-6 shrink-0 text-berry" aria-hidden />
                 <div>
-                  <p className="font-display text-2xl text-espresso">{p.title}</p>
+                  <p className="font-display text-2xl text-leaf">{p.title}</p>
                   <p className="mt-1 text-sm text-muted">{p.description}</p>
                   {p.endDate && <p className="mt-2 text-xs text-muted">Offer ends {new Date(p.endDate + 'T00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</p>}
                 </div>
@@ -66,7 +66,7 @@ export default function Home() {
 
       {/* Signature treatments */}
       {featuredServices.length > 0 && (
-        <section className="mt-24 bg-sand/70 py-20">
+        <section className="mt-24 bg-meadow/70 py-20">
           <div className="container-page">
             <SectionHeading
               eyebrow="Signature treatments"
@@ -98,7 +98,7 @@ export default function Home() {
       </section>
 
       {/* Why us */}
-      <section className="mt-24 bg-sand/60 py-20">
+      <section className="mt-24 bg-meadow/60 py-20">
         <div className="container-page">
           <SectionHeading eyebrow="Why Serenity" title="Personal care, every visit" />
           <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -112,7 +112,7 @@ export default function Home() {
               },
             ].map(({ Icon, title, text }) => (
               <div key={title} className="rounded-2xl bg-ivory/80 p-7 text-center">
-                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-almond text-espresso">
+                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-mint text-leaf">
                   <Icon className="h-5 w-5" aria-hidden />
                 </span>
                 <h3 className="mt-4 text-2xl">{title}</h3>
@@ -150,11 +150,11 @@ export default function Home() {
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {testimonials.slice(0, 4).map((t) => (
               <figure key={t.id} className="card p-7">
-                <Quote className="h-6 w-6 text-gold" aria-hidden />
+                <Quote className="h-6 w-6 text-berry" aria-hidden />
                 <blockquote className="mt-3 font-display text-xl leading-snug text-ink">“{t.quote}”</blockquote>
                 <figcaption className="mt-4 flex items-center justify-between text-sm text-muted">
                   <span>— {t.name}</span>
-                  <span aria-label={`${t.rating} out of 5 stars`} className="flex text-gold">
+                  <span aria-label={`${t.rating} out of 5 stars`} className="flex text-berry">
                     {Array.from({ length: 5 }, (_, i) => (
                       <Star key={i} className={`h-4 w-4 ${i < t.rating ? 'fill-current' : 'opacity-30'}`} aria-hidden />
                     ))}
@@ -202,13 +202,13 @@ export default function Home() {
 
       {/* Visit */}
       <section className="container-page mt-24">
-        <div className="card grid gap-8 bg-espresso p-8 text-white sm:p-12 md:grid-cols-2">
+        <div className="card grid gap-8 bg-leaf p-8 text-white sm:p-12 md:grid-cols-2">
           <div>
-            <p className="text-xs font-medium tracking-[0.22em] text-gold-soft uppercase">Visit us</p>
+            <p className="text-xs font-medium tracking-[0.22em] text-berry-soft uppercase">Visit us</p>
             <h2 className="mt-3 text-4xl text-white">Ready to unwind?</h2>
             <p className="mt-4 text-white/80">Message us on WhatsApp to book your treatment, or ask us anything.</p>
             <div className="mt-6">
-              <WhatsAppLink message={generalEnquiryMessage(settings.spaName, 'booking an appointment')} className="btn bg-white text-espresso hover:bg-cream">
+              <WhatsAppLink message={generalEnquiryMessage(settings.spaName, 'booking an appointment')} className="btn bg-white text-leaf hover:bg-cream">
                 Book on WhatsApp
               </WhatsAppLink>
             </div>
@@ -234,7 +234,7 @@ export default function Home() {
                 <p className="mt-1">Please message us on WhatsApp to check our opening hours.</p>
               )}
             </div>
-            <Link to="/contact" className="inline-flex items-center gap-1 text-gold-soft underline-offset-4 hover:underline">
+            <Link to="/contact" className="inline-flex items-center gap-1 text-berry-soft underline-offset-4 hover:underline">
               Contact details &amp; directions <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>

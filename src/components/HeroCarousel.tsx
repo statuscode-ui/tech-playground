@@ -75,7 +75,7 @@ export default function HeroCarousel() {
   const current = slides[index];
 
   return (
-    <section className="under-header relative isolate overflow-hidden bg-espresso-dark" aria-roledescription="carousel" aria-label="Spa highlights">
+    <section className="under-header relative isolate overflow-hidden bg-leaf-dark" aria-roledescription="carousel" aria-label="Spa highlights">
       {/* Background photos, stacked and crossfaded */}
       {slides.map((s, i) => (
         <img
@@ -92,18 +92,18 @@ export default function HeroCarousel() {
         />
       ))}
       {/* Darken for legible white text */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-espresso-dark/70 via-espresso-dark/55 to-espresso-dark/80" aria-hidden />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/60 via-black/40 to-leaf-dark/85" aria-hidden />
 
       <div className="container-page flex min-h-[78svh] flex-col items-center justify-center pt-16 pb-20 text-center text-white sm:min-h-[82svh]">
         <div key={index} className="fade-up max-w-3xl" aria-live={paused ? 'polite' : 'off'}>
-          <p className="label-caps text-xs text-gold-soft sm:text-sm">{current.eyebrow}</p>
+          <p className="label-caps text-xs text-berry-soft sm:text-sm">{current.eyebrow}</p>
           <h1 className="mt-4 text-4xl leading-[1.1] text-white sm:text-6xl">{current.title}</h1>
           {current.text && <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/85">{current.text}</p>}
         </div>
         <div className="mt-9 flex flex-wrap justify-center gap-3">
           <WhatsAppLink
             message={generalEnquiryMessage(settings.spaName, 'booking an appointment')}
-            className="btn-gold"
+            className="btn-accent"
             icon={<CalendarDays className="h-4 w-4" aria-hidden />}
           >
             Book on WhatsApp
@@ -156,7 +156,7 @@ export function QuickLinks() {
   return (
     <nav aria-label="Quick links" className="grid grid-cols-3 divide-x divide-linen border-b border-linen bg-ivory">
       {links.map(({ to, label, Icon }) => (
-        <Link key={label} to={to} className="group flex flex-col items-center gap-3 px-2 py-6 text-espresso transition hover:bg-cream">
+        <Link key={label} to={to} className="group flex flex-col items-center gap-3 px-2 py-6 text-leaf transition hover:bg-cream">
           <Icon className="h-7 w-7 transition group-hover:scale-110" strokeWidth={1.5} aria-hidden />
           <span className="label-caps text-center text-[0.7rem] sm:text-sm">{label}</span>
         </Link>
