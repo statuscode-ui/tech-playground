@@ -14,15 +14,11 @@
   --color-berry: #c2186f; /* magenta accent from the logo's "Haven Spa" */
   --color-berry-soft: #fbd6e8;
   --color-berry-deep: #a3135d; /* magenta dark enough for small text */
-  --color-logo-green: #3d8a24; /* logo "SERENITY" green, readable on white */
   --color-ink: #1d2a21;
   --color-muted: #4c5b50;
 
   --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-sans: 'Jost', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  /* Logo lettering: hand-drawn capitals for SERENITY, bold script for Haven Spa. */
-  --font-logo: 'Kalam', 'Comic Sans MS', cursive;
-  --font-script: 'Kaushan Script', 'Brush Script MT', cursive;
 }
 
 @layer base {
@@ -56,9 +52,9 @@
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
   }
   /* First section of a page: extends its background up behind the floating header
-     (the header's 4rem slot), so no strip of page colour shows above it. */
+     (the header's 5rem slot), so no strip of page colour shows above it. */
   .under-header {
-    @apply -mt-16 pt-16;
+    @apply -mt-20 pt-20;
   }
   .eyebrow {
     @apply text-xs font-semibold tracking-[0.24em] text-berry-deep uppercase;
