@@ -1,23 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Warm sand, espresso and amber palette. */
-  --color-cream: #efe5d3; /* page background */
-  --color-ivory: #fffcf6; /* cards, header */
-  --color-sand: #e6d8bf; /* alternate sections */
-  --color-linen: #dccbae; /* borders */
-  --color-taupe: #a88f6e;
-  --color-almond: #eadcc3;
-  --color-espresso: #2e2420; /* headings, dark buttons and label bars */
-  --color-espresso-dark: #211915;
-  --color-gold: #c98a2b; /* amber accent */
-  --color-gold-soft: #f0ddb5;
-  --color-bronze: #85561a; /* amber dark enough for small text on sand */
-  --color-ink: #2b2320;
-  --color-muted: #5e5247;
+  /* Fresh light-green palette taken from the Serenity Haven Spa logo:
+     leaf green for headings and dark buttons, berry magenta for the eye-catching accents. */
+  --color-cream: #f2f8ec; /* page background (light green) */
+  --color-ivory: #ffffff; /* cards, header */
+  --color-meadow: #e2f0d8; /* alternate sections */
+  --color-linen: #cde3c0; /* borders */
+  --color-sage: #7fb069;
+  --color-mint: #d8eecd;
+  --color-leaf: #1f5a37; /* headings, dark buttons and label bars */
+  --color-leaf-dark: #143d25;
+  --color-berry: #c2186f; /* magenta accent from the logo's "Haven Spa" */
+  --color-berry-soft: #fbd6e8;
+  --color-berry-deep: #a3135d; /* magenta dark enough for small text */
+  --color-logo-green: #3d8a24; /* logo "SERENITY" green, readable on white */
+  --color-ink: #1d2a21;
+  --color-muted: #4c5b50;
 
   --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-sans: 'Jost', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Logo lettering: hand-drawn capitals for SERENITY, bold script for Haven Spa. */
+  --font-logo: 'Kalam', 'Comic Sans MS', cursive;
+  --font-script: 'Kaushan Script', 'Brush Script MT', cursive;
 }
 
 @layer base {
@@ -31,12 +36,12 @@
   h1,
   h2,
   h3 {
-    @apply font-display text-espresso;
+    @apply font-display text-leaf;
     font-weight: 500;
     letter-spacing: -0.01em;
   }
   :focus-visible {
-    outline: 2px solid var(--color-espresso);
+    outline: 2px solid var(--color-leaf);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -56,29 +61,29 @@
     @apply -mt-16 pt-16;
   }
   .eyebrow {
-    @apply text-xs font-semibold tracking-[0.24em] text-muted uppercase;
+    @apply text-xs font-semibold tracking-[0.24em] text-berry-deep uppercase;
   }
   .btn-primary {
-    @apply btn bg-espresso text-white shadow-sm hover:bg-espresso-dark;
+    @apply btn bg-leaf text-white shadow-sm hover:bg-leaf-dark;
   }
   .btn-whatsapp {
-    @apply btn bg-espresso text-white shadow-sm hover:bg-espresso-dark;
+    @apply btn bg-leaf text-white shadow-sm hover:bg-leaf-dark;
   }
-  .btn-gold {
-    @apply btn bg-[#d39a3f] font-semibold text-espresso-dark shadow-sm hover:bg-[#c78b2f];
+  .btn-accent {
+    @apply btn bg-berry font-semibold text-white shadow-sm hover:bg-berry-deep;
   }
   /* Bold capitals used on dark label bars and card titles. */
   .label-caps {
     @apply font-sans text-sm font-semibold tracking-[0.14em] uppercase;
   }
   .btn-outline {
-    @apply btn border border-espresso/30 bg-transparent text-espresso hover:border-espresso hover:bg-espresso/5;
+    @apply btn border border-leaf/30 bg-transparent text-leaf hover:border-leaf hover:bg-leaf/5;
   }
   .card {
-    @apply overflow-hidden rounded-2xl border border-linen/70 bg-ivory shadow-[0_1px_2px_rgba(43,42,38,0.04),0_8px_24px_-12px_rgba(43,42,38,0.12)];
+    @apply overflow-hidden rounded-2xl border border-linen/70 bg-ivory shadow-[0_1px_2px_rgba(20,61,37,0.05),0_8px_24px_-12px_rgba(20,61,37,0.18)];
   }
   .input {
-    @apply w-full rounded-xl border border-linen bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:border-espresso focus:ring-2 focus:ring-espresso/15 focus:outline-none;
+    @apply w-full rounded-xl border border-linen bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:border-leaf focus:ring-2 focus:ring-leaf/15 focus:outline-none;
   }
   .label {
     @apply mb-1 block text-sm font-medium text-ink;
@@ -86,8 +91,8 @@
   .badge {
     @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
   }
-  .gold-rule {
-    @apply mx-auto h-px w-16 bg-gold/70;
+  .accent-rule {
+    @apply mx-auto h-px w-16 bg-berry/70;
   }
 }
 

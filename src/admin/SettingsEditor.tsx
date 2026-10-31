@@ -116,7 +116,7 @@ export default function SettingsEditor() {
             <Field key={f.key} field={f} values={s as unknown as Record<string, unknown>} setValue={set} error={errors[f.key]} />
           ))}
           {g.title === 'Contact' && testLink && (
-            <a href={testLink} target="_blank" rel="noopener noreferrer" className="text-sm text-espresso underline">
+            <a href={testLink} target="_blank" rel="noopener noreferrer" className="text-sm text-leaf underline">
               Test this WhatsApp number
             </a>
           )}
@@ -150,7 +150,7 @@ export default function SettingsEditor() {
         ))}
       </fieldset>
 
-      {msg && <p role="status" className="rounded-xl bg-almond px-4 py-2 text-sm text-espresso">{msg}</p>}
+      {msg && <p role="status" className="rounded-xl bg-mint px-4 py-2 text-sm text-leaf">{msg}</p>}
       <div className="sticky bottom-0 -mx-4 border-t border-linen bg-cream/95 px-4 py-3 backdrop-blur">
         <button type="submit" className="btn-primary" disabled={saving}>
           {saving ? 'Saving…' : 'Save settings'}

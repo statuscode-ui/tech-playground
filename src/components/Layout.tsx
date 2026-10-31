@@ -16,14 +16,19 @@ const NAV = [
   { to: '/contact', label: 'Contact' },
 ];
 
+/** Wordmark styled after the Serenity Haven Spa logo: green hand-drawn capitals over a magenta script. */
 function Logo() {
   const { settings } = useSiteData();
   if (settings.logoUrl) return <img src={settings.logoUrl} alt={settings.spaName} className="h-10 w-auto" />;
   const [first, ...rest] = settings.spaName.split(' ');
   return (
-    <span className="flex flex-col leading-none">
-      <span className="font-display text-2xl tracking-wide text-espresso">{first}</span>
-      {rest.length > 0 && <span className="text-[0.65rem] tracking-[0.3em] text-bronze uppercase">{rest.join(' ')}</span>}
+    <span className="relative flex flex-col items-start leading-none">
+      {/* Little green swoosh over the name, echoing the arc in the logo */}
+      <svg viewBox="0 0 120 14" className="absolute -top-3 left-2 h-2.5 w-20 text-sage" fill="none" aria-hidden>
+        <path d="M2 12C30 2 80 -1 118 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      </svg>
+      <span className="font-logo text-[1.7rem] font-bold tracking-wide text-logo-green uppercase">{first}</span>
+      {rest.length > 0 && <span className="-mt-1.5 ml-3 font-script text-lg text-berry">{rest.join(' ')}</span>}
     </span>
   );
 }
@@ -37,14 +42,14 @@ function Header() {
   }, [pathname]);
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `rounded-full px-3 py-2 text-sm tracking-wide transition ${isActive ? 'text-espresso font-medium' : 'text-muted hover:text-espresso'}`;
+    `rounded-full px-3 py-2 text-sm tracking-wide transition ${isActive ? 'text-leaf font-medium' : 'text-muted hover:text-leaf'}`;
 
   return (
     <>
       {promotions[0] && (
-        <div className="bg-espresso text-center text-sm text-white">
+        <div className="bg-leaf text-center text-sm text-white">
           <p className="container-page flex items-center justify-center gap-2 py-2">
-            <Sparkles className="h-4 w-4 text-gold-soft" aria-hidden />
+            <Sparkles className="h-4 w-4 text-berry-soft" aria-hidden />
             <span>
               <strong className="font-medium">{promotions[0].title}</strong>
               {promotions[0].description && <span className="hidden sm:inline"> · {promotions[0].description}</span>}
@@ -54,7 +59,7 @@ function Header() {
       )}
       {/* Floating pill header */}
       <header className="sticky top-3 z-40 px-3 sm:top-4">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 rounded-full bg-ivory/95 pr-2 pl-5 shadow-[0_8px_30px_-12px_rgba(46,36,32,0.35)] ring-1 ring-linen/70 backdrop-blur sm:pl-7">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 rounded-full bg-ivory/95 pr-2 pl-5 shadow-[0_8px_30px_-12px_rgba(20,61,37,0.35)] ring-1 ring-linen/70 backdrop-blur sm:pl-7">
           <Link to="/" aria-label="Home">
             <Logo />
           </Link>
@@ -71,7 +76,7 @@ function Header() {
             </WhatsAppLink>
             <button
               type="button"
-              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-espresso md:hidden"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-leaf md:hidden"
               aria-expanded={open}
               aria-controls="mobile-nav"
               onClick={() => setOpen((o) => !o)}
@@ -88,7 +93,7 @@ function Header() {
                 key={n.to}
                 to={n.to}
                 end={n.to === '/'}
-                className={({ isActive }) => `label-caps flex items-center justify-between rounded-2xl px-4 py-3.5 ${isActive ? 'bg-espresso text-white' : 'text-espresso'}`}
+                className={({ isActive }) => `label-caps flex items-center justify-between rounded-2xl px-4 py-3.5 ${isActive ? 'bg-leaf text-white' : 'text-leaf'}`}
               >
                 {n.label}
                 <ChevronRight className="h-4 w-4" aria-hidden />
@@ -111,10 +116,13 @@ function Footer() {
   ].filter((s) => s.href);
 
   return (
-    <footer className="mt-24 bg-espresso-dark text-white/80">
+    <footer className="mt-24 bg-leaf-dark text-white/80">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
-          <p className="font-display text-3xl text-white">{settings.spaName}</p>
+          <p className="flex flex-col items-start leading-none" aria-label={settings.spaName}>
+            <span className="font-logo text-3xl font-bold tracking-wide text-[#b7e39f] uppercase">{settings.spaName.split(' ')[0]}</span>
+            <span className="-mt-1 ml-4 font-script text-xl text-berry-soft">{settings.spaName.split(' ').slice(1).join(' ')}</span>
+          </p>
           <p className="mt-3 max-w-sm text-sm leading-relaxed">{settings.tagline}</p>
           {socials.length > 0 && (
             <ul className="mt-5 flex gap-2">
@@ -183,8 +191,8 @@ function BookingBar() {
   return (
     <>
       {/* Phones: full-width booking bar fixed to the bottom of the screen. */}
-      <div className="fixed inset-x-0 bottom-0 z-40 bg-espresso-dark/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
-        <a href={booking} target="_blank" rel="noopener noreferrer" className="btn-gold min-h-13 w-full text-base">
+      <div className="fixed inset-x-0 bottom-0 z-40 bg-leaf-dark/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+        <a href={booking} target="_blank" rel="noopener noreferrer" className="btn-accent min-h-13 w-full text-base">
           <CalendarDays className="h-5 w-5" aria-hidden />
           Book Appointment
           <span className="sr-only"> (opens WhatsApp)</span>
@@ -216,7 +224,7 @@ export default function Layout() {
   return (
     // Bottom padding on phones keeps the footer clear of the fixed booking bar.
     <div className="flex min-h-screen flex-col pb-20 md:pb-0">
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-espresso focus:px-4 focus:py-2 focus:text-white">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-leaf focus:px-4 focus:py-2 focus:text-white">
         Skip to content
       </a>
       <Header />

@@ -94,7 +94,7 @@ export default function CollectionManager<T extends object>({ name, title, singu
   if (editing)
     return (
       <form onSubmit={save} className="space-y-5" noValidate>
-        <button type="button" onClick={() => setEditing(null)} className="inline-flex items-center gap-1 text-sm text-muted hover:text-espresso">
+        <button type="button" onClick={() => setEditing(null)} className="inline-flex items-center gap-1 text-sm text-muted hover:text-leaf">
           <ArrowLeft className="h-4 w-4" aria-hidden /> Back to {title.toLowerCase()}
         </button>
         <h2 className="text-3xl">{editing.id ? `Edit ${singular.toLowerCase()}` : `New ${singular.toLowerCase()}`}</h2>
@@ -134,7 +134,7 @@ export default function CollectionManager<T extends object>({ name, title, singu
         </button>
       </div>
       {message && (
-        <p role="status" className="mt-4 rounded-xl bg-almond px-4 py-2 text-sm text-espresso">
+        <p role="status" className="mt-4 rounded-xl bg-mint px-4 py-2 text-sm text-leaf">
           {message}
         </p>
       )}
@@ -153,18 +153,18 @@ export default function CollectionManager<T extends object>({ name, title, singu
                   {s.subtitle && <p className="truncate text-xs text-muted">{s.subtitle}</p>}
                 </div>
                 {'published' in item && (
-                  <span className={`badge ${item.published ? 'bg-almond text-espresso' : 'bg-sand text-muted'}`}>{item.published ? 'Published' : 'Hidden'}</span>
+                  <span className={`badge ${item.published ? 'bg-mint text-leaf' : 'bg-meadow text-muted'}`}>{item.published ? 'Published' : 'Hidden'}</span>
                 )}
                 <div className="flex gap-1">
                   {'published' in item && (
-                    <button type="button" className="rounded-full p-2 hover:bg-sand" onClick={() => togglePublished(item)}>
+                    <button type="button" className="rounded-full p-2 hover:bg-meadow" onClick={() => togglePublished(item)}>
                       {item.published ? <EyeOff className="h-4 w-4" aria-hidden /> : <Eye className="h-4 w-4" aria-hidden />}
                       <span className="sr-only">{item.published ? 'Hide' : 'Publish'} {s.title}</span>
                     </button>
                   )}
                   <button
                     type="button"
-                    className="rounded-full p-2 hover:bg-sand"
+                    className="rounded-full p-2 hover:bg-meadow"
                     onClick={() => {
                       setErrors({});
                       setEditing(structuredClone(item));

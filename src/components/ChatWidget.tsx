@@ -1,7 +1,8 @@
 import { Bot, LoaderCircle, Send, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { aiAvailable, askAssistant, MAX_INPUT_CHARS, type ChatTurn } from '../ai/assistant';
-import { buildKnowledgeEntries, matchQuestion } from '../ai/knowledge';
+import { fallbackReply, smallTalkReply, SUGGESTIONS } from '../ai/conversation';
+import { buildKnowledgeEntries } from '../ai/knowledge';
 import { useSiteData } from '../data/SiteData';
 import { SlidingWindowLimiter } from '../lib/rateLimit';
 import { generalEnquiryMessage } from '../lib/whatsapp';
@@ -10,11 +11,11 @@ import { WhatsAppLink } from './ui';
 interface Msg extends ChatTurn {
   /** Show a WhatsApp hand-off button under this reply. */
   handoff?: boolean;
+  /** Tappable topic chips (shown only under the latest reply). */
+  suggestions?: string[];
 }
 
 const limiter = new SlidingWindowLimiter('shs-chat-hits', 15, 10 * 60 * 1000);
-
-const SUGGESTIONS = ['What treatments do you offer?', 'How do I book?', 'Do you offer home service?', 'Where are you located?'];
 
 export default function ChatWidget() {
   const data = useSiteData();
@@ -48,18 +49,9 @@ export default function ChatWidget() {
   }, [open]);
 
   function fallbackAnswer(q: string): Msg {
-    if (/^(hi|hello|hey|good (morning|afternoon|evening))\b/i.test(q.trim()) && q.trim().split(/\s+/).length <= 3)
-      return { role: 'assistant', text: 'Hello! What would you like to know? You can ask about treatments, booking, home service or our location.' };
-    if (/\b(treatments?|services?|offer|menu)\b/i.test(q) && data.services.length) {
-      return {
-        role: 'assistant',
-        text: `Our treatments: ${data.services.map((s) => s.name).join(', ')}. Ask about any of them for details, or tap “Book on WhatsApp” on the Treatments page.`,
-      };
-    }
-    const hit = matchQuestion(q, entries);
-    if (hit) return { role: 'assistant', text: hit.answer, handoff: true };
-    return { role: 'assistant', text: "Sorry, I don't have an answer for that. Please message us on WhatsApp and the team will help.", handoff: true };
+    return { role: 'assistant', ...fallbackReply(q, { spaName: settings.spaName, serviceNames: data.services.map((s) => s.name), entries }) };
   }
+
 
   async function send(text: string) {
     const q = text.trim().slice(0, MAX_INPUT_CHARS);
@@ -74,8 +66,10 @@ export default function ChatWidget() {
       return;
     }
 
-    if (!aiAvailable) {
-      setMessages((m) => [...m, fallbackAnswer(q)]);
+    // Everyday replies ("ok", "thanks", "bye") get an instant friendly answer without using the AI.
+    const talk = smallTalkReply(q, settings.spaName);
+    if (talk || !aiAvailable) {
+      setMessages((m) => [...m, talk ? { role: 'assistant', ...talk } : fallbackAnswer(q)]);
       return;
     }
     setBusy(true);
@@ -102,7 +96,7 @@ export default function ChatWidget() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="fixed right-4 bottom-24 z-40 inline-flex h-12 items-center gap-2 rounded-full bg-ivory px-4 text-sm font-medium text-espresso shadow-lg ring-1 ring-linen transition hover:bg-white md:right-6"
+          className="fixed right-4 bottom-24 z-40 inline-flex h-12 items-center gap-2 rounded-full bg-ivory px-4 text-sm font-medium text-leaf shadow-lg ring-1 ring-linen transition hover:bg-white md:right-6"
         >
           <Bot className="h-5 w-5" aria-hidden />
           Ask us
@@ -114,7 +108,7 @@ export default function ChatWidget() {
           aria-label={aiAvailable ? 'Spa assistant chat' : 'Frequently asked questions chat'}
           className="fixed inset-x-2 bottom-2 z-50 flex max-h-[min(36rem,calc(100dvh-1rem))] flex-col overflow-hidden rounded-2xl border border-linen bg-ivory shadow-2xl sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-96"
         >
-          <header className="flex items-center justify-between bg-espresso px-4 py-3 text-white">
+          <header className="flex items-center justify-between bg-leaf px-4 py-3 text-white">
             <div>
               <p className="font-display text-lg leading-tight">{settings.spaName}</p>
               <p className="text-xs text-white/75">{aiAvailable ? 'AI assistant · answers may be imperfect' : 'Automatic FAQ answers'}</p>
@@ -130,7 +124,7 @@ export default function ChatWidget() {
             {messages.length === 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {SUGGESTIONS.map((s) => (
-                  <button key={s} type="button" onClick={() => void send(s)} className="rounded-full border border-linen bg-white px-3 py-1.5 text-xs text-espresso hover:border-espresso/40">
+                  <button key={s} type="button" onClick={() => void send(s)} className="rounded-full border border-linen bg-white px-3 py-1.5 text-xs text-leaf hover:border-leaf/40">
                     {s}
                   </button>
                 ))}
@@ -144,6 +138,15 @@ export default function ChatWidget() {
                     <WhatsAppLink message={generalEnquiryMessage(settings.spaName)} className="btn-whatsapp min-h-9 px-4 py-1.5 text-xs">
                       Message us on WhatsApp
                     </WhatsAppLink>
+                  </div>
+                )}
+                {m.suggestions && i === messages.length - 1 && !busy && (
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {m.suggestions.map((sug) => (
+                      <button key={sug} type="button" onClick={() => void send(sug)} className="rounded-full border border-linen bg-white px-3 py-1.5 text-xs text-leaf hover:border-leaf/40">
+                        {sug}
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
@@ -189,7 +192,7 @@ function Bubble({ role, children }: { role: 'user' | 'assistant'; children: stri
   return (
     <p
       className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-line ${
-        role === 'user' ? 'ml-auto rounded-br-md bg-espresso text-white' : 'rounded-bl-md bg-sand text-ink'
+        role === 'user' ? 'ml-auto rounded-br-md bg-leaf text-white' : 'rounded-bl-md bg-meadow text-ink'
       }`}
     >
       {children}

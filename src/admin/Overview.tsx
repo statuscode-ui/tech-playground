@@ -107,16 +107,16 @@ export default function Overview() {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         {stats
           ? tiles.map((t) => (
-              <Link key={t.label} to={t.to} className="card p-4 hover:border-espresso/30">
+              <Link key={t.label} to={t.to} className="card p-4 hover:border-leaf/30">
                 <p className="text-xs text-muted">{t.label}</p>
-                <p className="mt-1 font-display text-3xl text-espresso">{t.value}</p>
+                <p className="mt-1 font-display text-3xl text-leaf">{t.value}</p>
               </Link>
             ))
-          : Array.from({ length: 6 }, (_, i) => <div key={i} className="card h-20 animate-pulse bg-sand/50" />)}
+          : Array.from({ length: 6 }, (_, i) => <div key={i} className="card h-20 animate-pulse bg-meadow/50" />)}
       </div>
 
       {stats && stats.services === 0 && (
-        <div className="card space-y-3 border-gold/40 p-6">
+        <div className="card space-y-3 border-berry/40 p-6">
           <h3 className="text-2xl">Get started</h3>
           <p className="text-sm text-muted">Add the starter content from Serenity Haven Spa’s flyers (treatments without prices, FAQs and contact details). Then add prices, hours and photos.</p>
           <button type="button" className="btn-primary" onClick={importStarter} disabled={importing}>
@@ -124,7 +124,7 @@ export default function Overview() {
           </button>
         </div>
       )}
-      {importMsg && <p role="status" className="rounded-xl bg-almond px-4 py-2 text-sm text-espresso">{importMsg}</p>}
+      {importMsg && <p role="status" className="rounded-xl bg-mint px-4 py-2 text-sm text-leaf">{importMsg}</p>}
 
       <div className="card p-6 text-sm">
         <h3 className="text-2xl">Website features</h3>
