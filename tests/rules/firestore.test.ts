@@ -129,3 +129,32 @@ describe('enquiries', () => {
     await assertFails(updateDoc(doc(user(), 'enquiries/e1'), { status: 'handled' }));
   });
 });
+
+describe('uploaded photos (media)', () => {
+  const photo = () => ({ dataUrl: 'data:image/webp;base64,UklGRiQAAABXRUJQ', name: 'nails.jpg', createdAt: serverTimestamp() });
+
+  it('admins can add photos and anyone can view them', async () => {
+    const ref = await addDoc(collection(admin(), 'media'), photo());
+    await assertSucceeds(getDoc(doc(visitor(), 'media', ref.id)));
+  });
+
+  it('visitors and non-admins cannot add photos', async () => {
+    await assertFails(addDoc(collection(visitor(), 'media'), photo()));
+    await assertFails(addDoc(collection(user(), 'media'), photo()));
+  });
+
+  it('only real images under the size limit are accepted, and photos cannot be edited', async () => {
+    await assertFails(addDoc(collection(admin(), 'media'), { ...photo(), dataUrl: 'data:text/html;base64,PHNjcmlwdD4=' }));
+    await assertFails(addDoc(collection(admin(), 'media'), { ...photo(), dataUrl: 'https://example.com/a.jpg' }));
+    await assertFails(addDoc(collection(admin(), 'media'), { ...photo(), dataUrl: 'data:image/webp;base64,' + 'A'.repeat(900001) }));
+    await assertFails(addDoc(collection(admin(), 'media'), { ...photo(), extra: true }));
+    const ref = await addDoc(collection(admin(), 'media'), photo());
+    await assertFails(updateDoc(doc(admin(), 'media', ref.id), { name: 'other' }));
+    await assertSucceeds(deleteDoc(doc(admin(), 'media', ref.id)));
+  });
+
+  it('a treatment can use an uploaded photo; an empty display order is refused', async () => {
+    await assertSucceeds(setDoc(doc(admin(), 'services/withphoto'), { ...service, slug: 'withphoto', imageUrl: 'media:abc123' }));
+    await assertFails(setDoc(doc(admin(), 'services/noorder'), { ...service, slug: 'noorder', order: null }));
+  });
+});

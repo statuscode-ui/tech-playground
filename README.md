@@ -56,7 +56,7 @@ Pricing changes, so check the [Firebase pricing page](https://firebase.google.co
 | Authentication (email/password) | Spark (free) | |
 | App Check (reCAPTCHA v3) | Spark (free) | reCAPTCHA v3 has its own free usage limits. |
 | AI Logic + Gemini Developer API | Spark (free tier) | The free tier applies **only while the project is not linked to a billing account**. Rate limits apply; see the AI Logic quotas page in the console. If the project is ever upgraded to Blaze, Gemini usage becomes pay-as-you-go. |
-| Cloud Storage (image uploads) | **Blaze (paid plan, needs a billing account)** | Default Storage buckets now require Blaze. **Off by default:** paste image links instead, or put images in `public/images/`. |
+| Cloud Storage | **Blaze (paid plan, needs a billing account)** | **Not used.** Dashboard photo uploads are stored in Firestore instead (see Photo uploads). |
 | Cloud Functions | Blaze | **Not used.** |
 
 **Trade-off:** a Cloud Function backend would allow true server-side rate limiting, but it requires Blaze. Instead, the AI runs through Firebase AI Logic, which proxies Gemini so **no Gemini API key ever reaches the browser**, and is protected by App Check and AI Logic's per-user rate limits. The browser also applies a courtesy limit (15 messages per 10 minutes), a 500-character input cap and a 400-token reply cap. These client-side checks can be bypassed by a determined attacker, so **enable App Check enforcement** before turning the AI on.
@@ -117,9 +117,9 @@ Firebase's API still lets anyone create a sign-in account, but such an account h
 
 The assistant's instructions (`src/ai/assistant.ts`) forbid it from inventing prices, hours or policies, making or confirming bookings, diagnosing conditions, or asking for payment or personal details. Its knowledge is built from the **published** Firestore data on each page load, so editing an FAQ or a price in the dashboard updates it immediately.
 
-### Image uploads (optional, paid plan)
+### Photo uploads (free)
 
-Images work without Storage: put files in `public/images/` (they deploy with the site), or paste any `https://` image link in the dashboard. If you upgrade to Blaze and want uploads from the dashboard, enable Storage, run `npx firebase deploy --only storage`, and set `VITE_STORAGE_UPLOADS_ENABLED=true`. Only admins can upload images under 5 MB.
+In the dashboard, **Upload photo** shrinks a photo in the browser (to at most 1200 px, usually 100–300 KB WebP) and stores it in the Firestore `media` collection. Treatments and products then reference it as `media:<id>`. This avoids Cloud Storage, which now requires the paid Blaze plan. The `media` rules allow public reads; only admins can add or remove photos, and only real images under about 900 KB. You can still paste an `https://` link, or use a file in `public/images/` (e.g. `/images/acrylic-nails.webp`).
 
 ## Deploy
 

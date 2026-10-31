@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ProductCard } from '../components/Cards';
 import { EmptyState, LoadingState, PageHeader, Price, SpaImage, WhatsAppLink } from '../components/ui';
 import { useSiteData } from '../data/SiteData';
+import { isMediaRef } from '../lib/media';
 import { usePageMeta } from '../lib/seo';
 import type { Product } from '../lib/types';
 import { STOCK_LABELS } from '../lib/types';
@@ -88,7 +89,7 @@ export function ProductDetail() {
   usePageMeta(
     product ? `${product.name} | ${settings.spaName}` : `Product | ${settings.spaName}`,
     product?.description.slice(0, 155) || `Products from ${settings.spaName}.`,
-    { image: product?.imageUrl || undefined },
+    { image: product?.imageUrl && !isMediaRef(product.imageUrl) ? product.imageUrl : undefined },
   );
   if (loading) return <LoadingState />;
   if (!product) return <NotFound />;

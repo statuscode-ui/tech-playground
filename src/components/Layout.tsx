@@ -3,6 +3,7 @@ import { FacebookIcon, InstagramIcon, TikTokIcon, WhatsAppIcon } from './BrandIc
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useSiteData } from '../data/SiteData';
+import { useImageSrc } from '../lib/media';
 import { generalEnquiryMessage, whatsappUrl } from '../lib/whatsapp';
 import { ErrorBanner, WhatsAppLink } from './ui';
 
@@ -19,7 +20,13 @@ const NAV = [
 /** The Serenity Haven Spa logo (public/images/logo.webp), or the owner's own upload from Settings. */
 function Logo() {
   const { settings } = useSiteData();
-  return <img src={settings.logoUrl || '/images/logo.webp'} alt={settings.spaName} width={440} height={328} className="h-16 w-auto sm:h-[4.5rem]" />;
+  return <img src={useLogoSrc()} alt={settings.spaName} width={440} height={328} className="h-16 w-auto sm:h-[4.5rem]" />;
+}
+
+/** Logo from Settings (a link or an uploaded photo), falling back to the built-in logo. */
+function useLogoSrc() {
+  const { settings } = useSiteData();
+  return useImageSrc(settings.logoUrl || '/images/logo.webp') || '/images/logo.webp';
 }
 
 function Header() {
@@ -97,6 +104,7 @@ function Header() {
 
 function Footer() {
   const { settings } = useSiteData();
+  const logoSrc = useLogoSrc();
   const year = new Date().getFullYear();
   const socials = [
     { href: settings.social.instagram, label: 'Instagram', Icon: InstagramIcon },
@@ -109,7 +117,7 @@ function Footer() {
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
           <span className="inline-block rounded-2xl bg-white px-4 py-2 shadow-sm">
-            <img src={settings.logoUrl || '/images/logo.webp'} alt={settings.spaName} width={440} height={328} loading="lazy" className="h-20 w-auto" />
+            <img src={logoSrc} alt={settings.spaName} width={440} height={328} loading="lazy" className="h-20 w-auto" />
           </span>
           <p className="mt-3 max-w-sm text-sm leading-relaxed">{settings.tagline}</p>
           {socials.length > 0 && (

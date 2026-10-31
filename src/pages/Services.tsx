@@ -5,6 +5,7 @@ import { ServiceCard } from '../components/Cards';
 import { BookingNote, EmptyState, LoadingState, PageHeader, Price, SpaImage, WhatsAppLink } from '../components/ui';
 import { useSiteData } from '../data/SiteData';
 import { formatDuration } from '../lib/format';
+import { isMediaRef } from '../lib/media';
 import { usePageMeta } from '../lib/seo';
 import { serviceBookingMessage } from '../lib/whatsapp';
 import NotFound from './NotFound';
@@ -84,7 +85,7 @@ export function ServiceDetail() {
   usePageMeta(
     service ? `${service.name} | ${settings.spaName}` : `Treatment | ${settings.spaName}`,
     service?.description.slice(0, 155) || `Treatments at ${settings.spaName}.`,
-    { image: service?.imageUrl || undefined },
+    { image: service?.imageUrl && !isMediaRef(service.imageUrl) ? service.imageUrl : undefined },
   );
 
   if (loading) return <LoadingState />;
