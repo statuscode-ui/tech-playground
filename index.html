@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
-    <link rel="preload" as="image" href="/images/hot-stone.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/images/massage-room.webp" type="image/webp" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -29,8 +29,38 @@
         "sameAs": ["https://www.instagram.com/serenity.havenspa/"]
       }
     </script>
+    <!-- Opening screen: shown once per visit while the site loads; hidden by src/main.tsx. -->
+    <style>
+      #splash { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 24px; text-align: center; color: #fff;
+        background: linear-gradient(rgba(33, 25, 21, 0.74), rgba(33, 25, 21, 0.8)), url('/images/massage-room.webp') center / cover no-repeat, #211915;
+        transition: opacity 0.6s ease, visibility 0.6s; }
+      #splash.splash-out { opacity: 0; visibility: hidden; }
+      html.no-splash #splash { display: none; }
+      #splash .splash-logo { width: 160px; height: 160px; border-radius: 50%; background: #fffcf6; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 6px rgba(255, 252, 246, 0.15), 0 20px 50px rgba(0, 0, 0, 0.35); }
+      #splash .splash-logo img { width: 78%; height: auto; }
+      #splash .splash-name { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(28px, 8vw, 46px); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500; margin: 6px 0 0; }
+      #splash .splash-tag { font-family: 'Jost', system-ui, sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: #f0ddb5; margin: 0; }
+      @media (prefers-reduced-motion: no-preference) {
+        #splash .splash-logo { animation: splash-pop 0.9s ease-out both; }
+        #splash .splash-name, #splash .splash-tag { animation: splash-rise 0.9s 0.25s ease-out both; }
+      }
+      @keyframes splash-pop { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
+      @keyframes splash-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    </style>
+    <script>
+      // Skip the opening screen after the first page of a visit, and on the admin dashboard.
+      try {
+        if (sessionStorage.getItem('shs-splash-seen') || location.pathname.indexOf('/admin') === 0) document.documentElement.classList.add('no-splash');
+      } catch (e) {}
+    </script>
+    <noscript><style>#splash { display: none; }</style></noscript>
   </head>
   <body>
+    <div id="splash" aria-hidden="true">
+      <div class="splash-logo"><img src="/images/logo.webp" alt="" /></div>
+      <p class="splash-name">Serenity Haven Spa</p>
+      <p class="splash-tag">Relax &middot; Restore &middot; Rejuvenate</p>
+    </div>
     <div id="root"></div>
     <noscript>Please enable JavaScript to view this website, or message us on WhatsApp: +233 50 349 5079.</noscript>
     <script type="module" src="/src/main.tsx"></script>

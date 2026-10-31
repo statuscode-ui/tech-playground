@@ -2,9 +2,9 @@ import { ArrowRight, House, Leaf, MapPin, Quote, Sparkles, Star } from 'lucide-r
 import { Link } from 'react-router-dom';
 import { InstagramIcon } from '../components/BrandIcons';
 import { CategoryTile, ProductCard, SignatureCard } from '../components/Cards';
-import HeroBackdrop from '../components/HeroBackdrop';
+import HeroCarousel, { QuickLinks } from '../components/HeroCarousel';
 import { FaqList } from './Faq';
-import { BookingNote, LoadingState, SectionHeading, SpaImage, WhatsAppLink } from '../components/ui';
+import { LoadingState, SectionHeading, SpaImage, WhatsAppLink } from '../components/ui';
 import { useSiteData } from '../data/SiteData';
 import { usePageMeta } from '../lib/seo';
 import { generalEnquiryMessage } from '../lib/whatsapp';
@@ -25,43 +25,9 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="under-header relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-sand via-cream to-almond/60" aria-hidden />
-        <div className="container-page relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:py-24">
-          <div className="fade-up relative isolate">
-            <HeroBackdrop />
-            <p className="eyebrow">Welcome to {settings.spaName}</p>
-            <h1 className="mt-4 text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">{settings.tagline || 'Relax, restore, rejuvenate.'}</h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">{settings.intro}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <WhatsAppLink message={generalEnquiryMessage(settings.spaName, 'booking an appointment')}>Book on WhatsApp</WhatsAppLink>
-              <Link to="/treatments" className="btn-outline">
-                View treatments <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
-            </div>
-            <BookingNote className="mt-4 max-w-md" />
-          </div>
-          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="absolute -inset-3 -z-0 rounded-[2.5rem] border border-gold/40" aria-hidden />
-            <SpaImage
-              src="/images/hot-stone.webp"
-              alt="Guest relaxing during a hot stone massage"
-              eager
-              className="relative aspect-[4/5] w-full rounded-[2rem] shadow-xl"
-            />
-            {settings.homeServiceEnabled && (
-              <div className="absolute -bottom-5 -left-3 flex items-center gap-3 rounded-2xl bg-ivory/95 px-4 py-3 shadow-lg ring-1 ring-linen sm:-left-8">
-                <House className="h-5 w-5 text-espresso" aria-hidden />
-                <p className="text-sm">
-                  <span className="block font-medium text-espresso">Home service available</span>
-                  <span className="text-muted">We can come to you</span>
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+      {/* Hero slideshow + quick links */}
+      <HeroCarousel />
+      <QuickLinks />
 
       {/* Active promotions */}
       {promotions.length > 0 && (
