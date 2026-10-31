@@ -16,21 +16,10 @@ const NAV = [
   { to: '/contact', label: 'Contact' },
 ];
 
-/** Wordmark styled after the Serenity Haven Spa logo: green hand-drawn capitals over a magenta script. */
+/** The Serenity Haven Spa logo (public/images/logo.webp), or the owner's own upload from Settings. */
 function Logo() {
   const { settings } = useSiteData();
-  if (settings.logoUrl) return <img src={settings.logoUrl} alt={settings.spaName} className="h-10 w-auto" />;
-  const [first, ...rest] = settings.spaName.split(' ');
-  return (
-    <span className="relative flex flex-col items-start leading-none">
-      {/* Little green swoosh over the name, echoing the arc in the logo */}
-      <svg viewBox="0 0 120 14" className="absolute -top-3 left-2 h-2.5 w-20 text-sage" fill="none" aria-hidden>
-        <path d="M2 12C30 2 80 -1 118 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-      </svg>
-      <span className="font-logo text-[1.7rem] font-bold tracking-wide text-logo-green uppercase">{first}</span>
-      {rest.length > 0 && <span className="-mt-1.5 ml-3 font-script text-lg text-berry">{rest.join(' ')}</span>}
-    </span>
-  );
+  return <img src={settings.logoUrl || '/images/logo.webp'} alt={settings.spaName} width={440} height={328} className="h-16 w-auto sm:h-[4.5rem]" />;
 }
 
 function Header() {
@@ -59,7 +48,7 @@ function Header() {
       )}
       {/* Floating pill header */}
       <header className="sticky top-3 z-40 px-3 sm:top-4">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 rounded-full bg-ivory/95 pr-2 pl-5 shadow-[0_8px_30px_-12px_rgba(20,61,37,0.35)] ring-1 ring-linen/70 backdrop-blur sm:pl-7">
+        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-3 rounded-full bg-ivory/95 pr-3 pl-6 shadow-[0_8px_30px_-12px_rgba(20,61,37,0.35)] ring-1 ring-linen/70 backdrop-blur sm:pl-7">
           <Link to="/" aria-label="Home">
             <Logo />
           </Link>
@@ -119,10 +108,9 @@ function Footer() {
     <footer className="mt-24 bg-leaf-dark text-white/80">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
-          <p className="flex flex-col items-start leading-none" aria-label={settings.spaName}>
-            <span className="font-logo text-3xl font-bold tracking-wide text-[#b7e39f] uppercase">{settings.spaName.split(' ')[0]}</span>
-            <span className="-mt-1 ml-4 font-script text-xl text-berry-soft">{settings.spaName.split(' ').slice(1).join(' ')}</span>
-          </p>
+          <span className="inline-block rounded-2xl bg-white px-4 py-2 shadow-sm">
+            <img src={settings.logoUrl || '/images/logo.webp'} alt={settings.spaName} width={440} height={328} loading="lazy" className="h-20 w-auto" />
+          </span>
           <p className="mt-3 max-w-sm text-sm leading-relaxed">{settings.tagline}</p>
           {socials.length > 0 && (
             <ul className="mt-5 flex gap-2">
