@@ -132,6 +132,22 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // ---- Photos uploaded from the dashboard (shrunk in the browser, stored as data URLs) ----
+    // Cloud Storage needs the paid plan, so small photos live here instead. Public read;
+    // only admins can add or remove them, and only real images under ~900 KB.
+    match /media/{id} {
+      allow read: if true;
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['dataUrl', 'name', 'createdAt'])
+        && request.resource.data.dataUrl is string
+        && request.resource.data.dataUrl.size() <= 900000
+        && request.resource.data.dataUrl.matches('data:image/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+')
+        && optStr(request.resource.data, 'name', 120)
+        && request.resource.data.createdAt == request.time;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
     // ---- Contact-form enquiries: write-only for visitors, private to admins ----
     match /enquiries/{id} {
       allow create: if request.resource.data.keys().hasOnly(['name', 'contact', 'subject', 'message', 'consent', 'status', 'createdAt'])

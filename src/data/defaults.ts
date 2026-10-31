@@ -29,7 +29,7 @@ export const emptyService: Omit<Service, 'id'> = {
   preparation: '',
   aftercare: '',
   available: true,
-  published: false,
+  published: true,
   featured: false,
   order: 100,
 };
@@ -47,26 +47,26 @@ export const emptyProduct: Omit<Product, 'id'> = {
   stockStatus: 'in_stock',
   usage: '',
   ingredients: '',
-  published: false,
+  published: true,
   featured: false,
   order: 100,
 };
 
-export const emptyFaq: Omit<Faq, 'id'> = { question: '', answer: '', category: '', published: false, order: 100 };
+export const emptyFaq: Omit<Faq, 'id'> = { question: '', answer: '', category: '', published: true, order: 100 };
 
 export const emptyPromotion: Omit<Promotion, 'id'> = {
   title: '',
   description: '',
   startDate: '',
   endDate: '',
-  published: false,
+  published: true,
 };
 
 export const emptyTestimonial: Omit<Testimonial, 'id'> = {
   name: '',
   quote: '',
   rating: 5,
-  published: false,
+  published: true,
   order: 100,
 };
 

@@ -18,7 +18,6 @@ export const firebaseConfigured = Boolean(config.apiKey && config.projectId && c
 export const appCheckEnabled = firebaseConfigured && Boolean(env.VITE_RECAPTCHA_SITE_KEY);
 export const aiEnabled = firebaseConfigured && env.VITE_AI_ENABLED === 'true';
 export const aiModel: string = env.VITE_AI_MODEL || 'gemini-3.5-flash-lite';
-export const storageUploadsEnabled = firebaseConfigured && env.VITE_STORAGE_UPLOADS_ENABLED === 'true';
 export const siteUrl: string = (env.VITE_SITE_URL || '').replace(/\/$/, '');
 
 let app: FirebaseApp | null = null;

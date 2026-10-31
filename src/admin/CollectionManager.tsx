@@ -10,6 +10,20 @@ import { Field, validateFields, type FieldDef } from './fields';
 
 type Doc = Record<string, unknown> & { id: string };
 
+/** Plain-language reason for a failed save, based on the Firebase error code. */
+export function saveErrorMessage(err: unknown): string {
+  const code = (err as { code?: string } | null)?.code ?? '';
+  if (code.includes('permission-denied'))
+    return 'The database refused this save because something isn’t in the allowed format, for example a pasted photo instead of an uploaded one, or text that is too long. Check the photo and the fields above. If your login has expired, sign out and back in.';
+  if (code.includes('unavailable') || code.includes('deadline')) return 'You seem to be offline. Check your internet connection and press Save again.';
+  return 'Save failed. Please try again. If it keeps happening, take a screenshot of this form and send it to whoever manages the website.';
+}
+
+/** Another item (not the one being edited) that already uses this web address, if any. */
+export function findSlugClash<T extends { id: string; slug?: unknown }>(items: T[], slug: string, id: string): T | undefined {
+  return items.find((i) => i.slug === slug && i.id !== id);
+}
+
 export interface CollectionManagerProps<T extends object> {
   name: string; // Firestore collection
   title: string;
@@ -29,6 +43,8 @@ export default function CollectionManager<T extends object>({ name, title, singu
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [formError, setFormError] = useState('');
+  const [messageIsError, setMessageIsError] = useState(false);
 
   const load = useCallback(async () => {
     const snap = await getDocs(collection(db!, name));
@@ -41,6 +57,7 @@ export default function CollectionManager<T extends object>({ name, title, singu
     load().catch((e) => {
       console.error(e);
       setMessage('Could not load. Check your connection and admin access.');
+      setMessageIsError(true);
       setItems([]);
     });
   }, [load]);
@@ -51,14 +68,22 @@ export default function CollectionManager<T extends object>({ name, title, singu
     const v: Doc = { ...editing };
     if (slugFrom && 'slug' in v) {
       v.slug = slugify(String(v.slug || v[slugFrom] || ''));
-      const clash = items?.find((i) => i.slug === v.slug && i.id !== v.id);
+      const clash = findSlugClash(items ?? [], String(v.slug), v.id);
       if (clash) {
-        setErrors({ slug: 'Another item already uses this web address. Change the slug.' });
+        // Show the generated address in the box, and say which item already has it.
+        setEditing((d) => (d ? { ...d, slug: v.slug } : d));
+        const other = summary(clash as unknown as T).title;
+        setErrors({
+          slug: `“${other}” already uses the web address “${v.slug}”${clash.published ? '' : ' (it is hidden)'}. Edit that ${singular.toLowerCase()} instead, or change the name or web address.`,
+        });
         return;
       }
     }
+    // An emptied "Display order" box would be rejected by the security rules.
+    if ('order' in v && (v.order == null || Number.isNaN(v.order))) v.order = 100;
     const errs = validateFields(fields, v);
     setErrors(errs);
+    setFormError('');
     if (Object.keys(errs).length) return;
     setSaving(true);
     try {
@@ -67,28 +92,44 @@ export default function CollectionManager<T extends object>({ name, title, singu
       else await addDoc(collection(db!, name), { ...data, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
       setEditing(null);
       setMessage(`${singular} saved.`);
+      setMessageIsError(false);
       await load();
       reload();
     } catch (err) {
       console.error(err);
-      setMessage('Save failed. Check every field and that your account is an administrator.');
+      setFormError(saveErrorMessage(err));
     } finally {
       setSaving(false);
     }
   }
 
   async function togglePublished(item: Doc) {
-    await updateDoc(doc(db!, name, item.id), { published: !item.published, updatedAt: serverTimestamp() });
-    await load();
-    reload();
+    try {
+      await updateDoc(doc(db!, name, item.id), { published: !item.published, updatedAt: serverTimestamp() });
+      setMessage(`${summary(item as unknown as T).title} is now ${item.published ? 'hidden' : 'published'}.`);
+      setMessageIsError(false);
+      await load();
+      reload();
+    } catch (err) {
+      console.error(err);
+      setMessage(saveErrorMessage(err));
+      setMessageIsError(true);
+    }
   }
 
   async function remove(item: Doc) {
     if (!confirm(`Delete “${summary(item as unknown as T).title}”? This cannot be undone.`)) return;
-    await deleteDoc(doc(db!, name, item.id));
-    setMessage(`${singular} deleted.`);
-    await load();
-    reload();
+    try {
+      await deleteDoc(doc(db!, name, item.id));
+      setMessage(`${singular} deleted.`);
+      setMessageIsError(false);
+      await load();
+      reload();
+    } catch (err) {
+      console.error(err);
+      setMessage(saveErrorMessage(err));
+      setMessageIsError(true);
+    }
   }
 
   if (editing)
@@ -104,6 +145,11 @@ export default function CollectionManager<T extends object>({ name, title, singu
           ))}
         </div>
         {Object.keys(errors).length > 0 && <p role="alert" className="text-sm text-red-700">Please fix the highlighted fields.</p>}
+        {formError && (
+          <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+            {formError}
+          </p>
+        )}
         <div className="sticky bottom-0 -mx-4 flex gap-3 border-t border-linen bg-cream/95 px-4 py-3 backdrop-blur">
           <button type="submit" className="btn-primary" disabled={saving}>
             {saving ? 'Saving…' : 'Save'}
@@ -127,6 +173,7 @@ export default function CollectionManager<T extends object>({ name, title, singu
           className="btn-primary"
           onClick={() => {
             setErrors({});
+            setFormError('');
             setEditing({ ...(structuredClone(empty) as unknown as Doc), id: '' });
           }}
         >
@@ -134,7 +181,10 @@ export default function CollectionManager<T extends object>({ name, title, singu
         </button>
       </div>
       {message && (
-        <p role="status" className="mt-4 rounded-xl bg-mint px-4 py-2 text-sm text-leaf">
+        <p
+          role={messageIsError ? 'alert' : 'status'}
+          className={`mt-4 rounded-xl px-4 py-2 text-sm ${messageIsError ? 'border border-red-200 bg-red-50 text-red-800' : 'bg-mint text-leaf'}`}
+        >
           {message}
         </p>
       )}
@@ -167,6 +217,7 @@ export default function CollectionManager<T extends object>({ name, title, singu
                     className="rounded-full p-2 hover:bg-meadow"
                     onClick={() => {
                       setErrors({});
+                      setFormError('');
                       setEditing(structuredClone(item));
                     }}
                   >

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { seedFaqs, seedProducts, seedServices, seedSettings } from '../data/seed';
 import { useSiteData } from '../data/SiteData';
-import { aiEnabled, appCheckEnabled, db, storageUploadsEnabled } from '../lib/firebase';
+import { aiEnabled, appCheckEnabled, db } from '../lib/firebase';
 import { activePromotions } from '../lib/promotions';
 import type { Promotion } from '../lib/types';
 
@@ -131,7 +131,7 @@ export default function Overview() {
         <ul className="mt-3 space-y-2">
           <li>AI chat assistant: <strong>{aiEnabled ? 'on' : 'off (visitors get automatic FAQ answers)'}</strong></li>
           <li>App Check abuse protection: <strong>{appCheckEnabled ? 'on' : 'off'}</strong></li>
-          <li>Image uploads: <strong>{storageUploadsEnabled ? 'on (Cloud Storage)' : 'off (paste image links instead)'}</strong></li>
+          <li>Photo uploads: <strong>on (photos are shrunk and stored free in the database)</strong></li>
         </ul>
       </div>
     </div>

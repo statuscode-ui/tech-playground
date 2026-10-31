@@ -1,12 +1,15 @@
 import { Flower2, Info, LoaderCircle } from 'lucide-react';
 import { WhatsAppIcon } from './BrandIcons';
+import { useImageSrc } from '../lib/media';
 import type { ReactNode } from 'react';
 import { useSiteData } from '../data/SiteData';
 import { formatPrice } from '../lib/format';
 import { whatsappUrl } from '../lib/whatsapp';
 
 export function SpaImage({ src, alt, className = '', eager = false }: { src: string; alt: string; className?: string; eager?: boolean }) {
-  if (!src)
+  // Handles normal links and photos uploaded from the dashboard ("media:<id>").
+  const url = useImageSrc(src);
+  if (!url)
     return (
       <div
         className={`flex items-center justify-center bg-gradient-to-br from-mint via-meadow to-berry-soft ${className}`}
@@ -16,15 +19,7 @@ export function SpaImage({ src, alt, className = '', eager = false }: { src: str
         <Flower2 className="h-10 w-10 text-leaf/40" aria-hidden />
       </div>
     );
-  return (
-    <img
-      src={src}
-      alt={alt}
-      loading={eager ? 'eager' : 'lazy'}
-      decoding="async"
-      className={`object-cover ${className}`}
-    />
-  );
+  return <img src={url} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" className={`object-cover ${className}`} />;
 }
 
 export function Price({ price, promoPrice, className = '' }: { price: number | null; promoPrice: number | null; className?: string }) {
