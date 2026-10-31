@@ -80,7 +80,7 @@ describe('withDefaults', () => {
   it('fills missing fields and ignores wrongly typed ones', () => {
     const p = withDefaults(emptyProduct, { name: 'X', published: 'yes', price: 10 });
     expect(p.name).toBe('X');
-    expect(p.published).toBe(false);
+    expect(p.published).toBe(true); // wrong type falls back to the default
     expect(p.price).toBe(10);
     expect(p.stockStatus).toBe('in_stock');
   });

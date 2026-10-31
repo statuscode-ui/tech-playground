@@ -10,6 +10,11 @@ import { Field, validateFields, type FieldDef } from './fields';
 
 type Doc = Record<string, unknown> & { id: string };
 
+/** Another item (not the one being edited) that already uses this web address, if any. */
+export function findSlugClash<T extends { id: string; slug?: unknown }>(items: T[], slug: string, id: string): T | undefined {
+  return items.find((i) => i.slug === slug && i.id !== id);
+}
+
 export interface CollectionManagerProps<T extends object> {
   name: string; // Firestore collection
   title: string;
@@ -51,9 +56,14 @@ export default function CollectionManager<T extends object>({ name, title, singu
     const v: Doc = { ...editing };
     if (slugFrom && 'slug' in v) {
       v.slug = slugify(String(v.slug || v[slugFrom] || ''));
-      const clash = items?.find((i) => i.slug === v.slug && i.id !== v.id);
+      const clash = findSlugClash(items ?? [], String(v.slug), v.id);
       if (clash) {
-        setErrors({ slug: 'Another item already uses this web address. Change the slug.' });
+        // Show the generated address in the box, and say which item already has it.
+        setEditing((d) => (d ? { ...d, slug: v.slug } : d));
+        const other = summary(clash as unknown as T).title;
+        setErrors({
+          slug: `“${other}” already uses the web address “${v.slug}”${clash.published ? '' : ' (it is hidden)'}. Edit that ${singular.toLowerCase()} instead, or change the name or web address.`,
+        });
         return;
       }
     }
