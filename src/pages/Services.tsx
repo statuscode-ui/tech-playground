@@ -1,6 +1,6 @@
 import { ArrowLeft, Clock, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ServiceCard } from '../components/Cards';
 import { BookingNote, EmptyState, LoadingState, PageHeader, Price, SpaImage, WhatsAppLink } from '../components/ui';
 import { useSiteData } from '../data/SiteData';
@@ -21,7 +21,7 @@ export function CategoryChips({ categories, value, onChange, label }: { categori
             type="button"
             aria-pressed={active}
             onClick={() => onChange(c === 'All' ? '' : c)}
-            className={`min-h-10 rounded-full border px-4 text-sm transition ${active ? 'border-forest bg-forest text-white' : 'border-linen bg-ivory text-ink hover:border-forest/40'}`}
+            className={`min-h-10 rounded-full border px-4 text-sm transition ${active ? 'border-espresso bg-espresso text-white' : 'border-linen bg-ivory text-ink hover:border-espresso/40'}`}
           >
             {c}
           </button>
@@ -35,7 +35,10 @@ export default function Services() {
   const { settings, services, loading } = useSiteData();
   usePageMeta(`Treatments & prices | ${settings.spaName}`, `Massages, facials, nail care and more at ${settings.spaName}. See prices and book on WhatsApp.`);
   const [q, setQ] = useState('');
-  const [cat, setCat] = useState('');
+  // The category lives in the URL (?category=Massages) so home page tiles can link straight to it.
+  const [params, setParams] = useSearchParams();
+  const cat = params.get('category') ?? '';
+  const setCat = (c: string) => setParams(c ? { category: c } : {}, { replace: true });
   const categories = useMemo(() => [...new Set(services.map((s) => s.category).filter(Boolean))], [services]);
   const list = services.filter(
     (s) => (!cat || s.category === cat) && (!q || `${s.name} ${s.category} ${s.description}`.toLowerCase().includes(q.toLowerCase())),
@@ -89,7 +92,7 @@ export function ServiceDetail() {
 
   return (
     <article className="container-page py-10 sm:py-14">
-      <Link to="/treatments" className="inline-flex items-center gap-1 text-sm text-muted hover:text-forest">
+      <Link to="/treatments" className="inline-flex items-center gap-1 text-sm text-muted hover:text-espresso">
         <ArrowLeft className="h-4 w-4" aria-hidden /> All treatments
       </Link>
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
@@ -138,7 +141,7 @@ export function ServiceDetail() {
             </section>
           )}
           {settings.homeServiceEnabled && settings.homeServiceNote && (
-            <p className="mt-8 rounded-2xl bg-sage-soft/60 p-4 text-sm leading-relaxed text-forest">{settings.homeServiceNote}</p>
+            <p className="mt-8 rounded-2xl bg-almond/60 p-4 text-sm leading-relaxed text-espresso">{settings.homeServiceNote}</p>
           )}
         </div>
       </div>

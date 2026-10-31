@@ -1,18 +1,20 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-cream: #fbf7f0;
-  --color-ivory: #fffdf9;
-  --color-sand: #efe6d8;
-  --color-linen: #e4d7c3;
-  --color-sage: #8aa58c;
-  --color-sage-soft: #dde7dc;
-  --color-forest: #2f4a3a;
-  --color-forest-dark: #233a2d;
-  --color-gold: #b8975a;
-  --color-gold-soft: #e9dcc0;
-  --color-ink: #2b2a26;
-  --color-muted: #5f5b52;
+  /* Warm sand, espresso and amber palette. */
+  --color-cream: #efe5d3; /* page background */
+  --color-ivory: #fffcf6; /* cards, header */
+  --color-sand: #e6d8bf; /* alternate sections */
+  --color-linen: #dccbae; /* borders */
+  --color-taupe: #a88f6e;
+  --color-almond: #eadcc3;
+  --color-espresso: #2e2420; /* headings, dark buttons and label bars */
+  --color-espresso-dark: #211915;
+  --color-gold: #c98a2b; /* amber accent */
+  --color-gold-soft: #f0ddb5;
+  --color-bronze: #85561a; /* amber dark enough for small text on sand */
+  --color-ink: #2b2320;
+  --color-muted: #5e5247;
 
   --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-sans: 'Jost', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -29,12 +31,12 @@
   h1,
   h2,
   h3 {
-    @apply font-display text-forest;
+    @apply font-display text-espresso;
     font-weight: 500;
     letter-spacing: -0.01em;
   }
   :focus-visible {
-    outline: 2px solid var(--color-forest);
+    outline: 2px solid var(--color-espresso);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -48,23 +50,35 @@
   .container-page {
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
   }
+  /* First section of a page: extends its background up behind the floating header
+     (the header's 4rem slot), so no strip of page colour shows above it. */
+  .under-header {
+    @apply -mt-16 pt-16;
+  }
   .eyebrow {
-    @apply text-xs font-medium tracking-[0.22em] text-[#8a6d37] uppercase;
+    @apply text-xs font-semibold tracking-[0.24em] text-muted uppercase;
   }
   .btn-primary {
-    @apply btn bg-forest text-white shadow-sm hover:bg-forest-dark;
+    @apply btn bg-espresso text-white shadow-sm hover:bg-espresso-dark;
   }
   .btn-whatsapp {
-    @apply btn bg-[#1f7a4d] text-white shadow-sm hover:bg-[#17633e];
+    @apply btn bg-espresso text-white shadow-sm hover:bg-espresso-dark;
+  }
+  .btn-gold {
+    @apply btn bg-[#d39a3f] font-semibold text-espresso-dark shadow-sm hover:bg-[#c78b2f];
+  }
+  /* Bold capitals used on dark label bars and card titles. */
+  .label-caps {
+    @apply font-sans text-sm font-semibold tracking-[0.14em] uppercase;
   }
   .btn-outline {
-    @apply btn border border-forest/30 bg-transparent text-forest hover:border-forest hover:bg-forest/5;
+    @apply btn border border-espresso/30 bg-transparent text-espresso hover:border-espresso hover:bg-espresso/5;
   }
   .card {
     @apply overflow-hidden rounded-2xl border border-linen/70 bg-ivory shadow-[0_1px_2px_rgba(43,42,38,0.04),0_8px_24px_-12px_rgba(43,42,38,0.12)];
   }
   .input {
-    @apply w-full rounded-xl border border-linen bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:border-forest focus:ring-2 focus:ring-forest/15 focus:outline-none;
+    @apply w-full rounded-xl border border-linen bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:border-espresso focus:ring-2 focus:ring-espresso/15 focus:outline-none;
   }
   .label {
     @apply mb-1 block text-sm font-medium text-ink;

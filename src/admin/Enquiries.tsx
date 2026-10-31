@@ -56,7 +56,7 @@ export default function Enquiries() {
                     </p>
                     <p className="text-xs text-muted">{e.createdAt ? e.createdAt.toLocaleString() : ''}{e.subject && ` · ${e.subject}`}</p>
                   </div>
-                  <span className={`badge ${e.status === 'new' ? 'bg-gold-soft text-[#6b5223]' : 'bg-sage-soft text-forest'}`}>{e.status === 'new' ? 'New' : 'Handled'}</span>
+                  <span className={`badge ${e.status === 'new' ? 'bg-gold-soft text-espresso' : 'bg-almond text-espresso'}`}>{e.status === 'new' ? 'New' : 'Handled'}</span>
                 </div>
                 <p className="mt-3 text-sm whitespace-pre-line">{e.message}</p>
                 <div className="mt-4 flex flex-wrap gap-2">

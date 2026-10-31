@@ -9,11 +9,11 @@ export function SpaImage({ src, alt, className = '', eager = false }: { src: str
   if (!src)
     return (
       <div
-        className={`flex items-center justify-center bg-gradient-to-br from-sage-soft via-sand to-gold-soft ${className}`}
+        className={`flex items-center justify-center bg-gradient-to-br from-almond via-sand to-gold-soft ${className}`}
         role="img"
         aria-label={alt || 'Image coming soon'}
       >
-        <Flower2 className="h-10 w-10 text-forest/40" aria-hidden />
+        <Flower2 className="h-10 w-10 text-espresso/40" aria-hidden />
       </div>
     );
   return (
@@ -34,13 +34,13 @@ export function Price({ price, promoPrice, className = '' }: { price: number | n
   if (promoPrice != null && promoPrice < price)
     return (
       <span className={className}>
-        <span className="font-medium text-forest">{formatPrice(promoPrice, cur)}</span>{' '}
+        <span className="font-medium text-espresso">{formatPrice(promoPrice, cur)}</span>{' '}
         <s className="text-sm text-muted" aria-label={`was ${formatPrice(price, cur)}`}>
           {formatPrice(price, cur)}
         </s>
       </span>
     );
-  return <span className={`font-medium text-forest ${className}`}>{formatPrice(price, cur)}</span>;
+  return <span className={`font-medium text-espresso ${className}`}>{formatPrice(price, cur)}</span>;
 }
 
 export function WhatsAppLink({
@@ -48,18 +48,21 @@ export function WhatsAppLink({
   children,
   className = 'btn-whatsapp',
   onClick,
+  icon,
 }: {
   message?: string;
   children: ReactNode;
   className?: string;
   onClick?: () => void;
+  /** Replaces the default WhatsApp glyph, e.g. a calendar on "Book" buttons. */
+  icon?: ReactNode;
 }) {
   const { settings } = useSiteData();
   const href = whatsappUrl(settings.whatsappNumber, message);
   if (!href) return null;
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className={className} onClick={onClick}>
-      <WhatsAppIcon className="h-4 w-4" />
+      {icon ?? <WhatsAppIcon className="h-4 w-4" />}
       {children}
       <span className="sr-only"> (opens WhatsApp)</span>
     </a>
@@ -87,7 +90,7 @@ export function SectionHeading({ eyebrow, title, intro, align = 'center' }: { ey
 
 export function PageHeader({ eyebrow, title, intro }: { eyebrow?: string; title: string; intro?: string }) {
   return (
-    <header className="border-b border-linen/60 bg-gradient-to-b from-sand/70 to-cream">
+    <header className="under-header border-b border-linen/60 bg-gradient-to-b from-sand/70 to-cream">
       <div className="container-page py-14 text-center sm:py-20">
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
         <h1 className="mt-3 text-4xl sm:text-5xl">{title}</h1>
@@ -110,7 +113,7 @@ export function LoadingState({ label = 'Loading…' }: { label?: string }) {
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="card mx-auto max-w-lg p-8 text-center">
-      <Flower2 className="mx-auto h-8 w-8 text-sage" aria-hidden />
+      <Flower2 className="mx-auto h-8 w-8 text-taupe" aria-hidden />
       <h3 className="mt-3 text-2xl">{title}</h3>
       {children && <div className="mt-2 text-sm text-muted">{children}</div>}
     </div>

@@ -140,7 +140,7 @@ export function Field({ field: f, values, setValue, error }: { field: FieldDef; 
     case 'checkbox':
       return (
         <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" className="mt-0.5 h-4 w-4 accent-forest" checked={Boolean(v)} onChange={(e) => setValue(f.key, e.target.checked)} />
+          <input type="checkbox" className="mt-0.5 h-4 w-4 accent-espresso" checked={Boolean(v)} onChange={(e) => setValue(f.key, e.target.checked)} />
           <span>
             {f.label}
             {f.help && <span className="block text-xs text-muted">{f.help}</span>}

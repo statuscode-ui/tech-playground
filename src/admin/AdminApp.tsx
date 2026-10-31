@@ -65,7 +65,7 @@ function Login() {
           <input id="password" type="password" autoComplete="current-password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
         {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
-        {info && <p role="status" className="text-sm text-forest">{info}</p>}
+        {info && <p role="status" className="text-sm text-espresso">{info}</p>}
         <button className="btn-primary w-full" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
         <button type="button" className="w-full text-sm text-muted underline" onClick={reset}>Forgot password</button>
         <p className="text-xs text-muted">There is no public sign-up. Administrator accounts are created by the site owner in the Firebase console.</p>
@@ -92,13 +92,13 @@ export function Dashboard({ user }: { user: User }) {
     <div className="min-h-screen bg-cream">
       <header className="sticky top-0 z-30 border-b border-linen bg-ivory/95 backdrop-blur">
         <div className="container-page flex h-14 items-center justify-between gap-3">
-          <p className="font-display text-xl text-forest">Spa dashboard</p>
+          <p className="font-display text-xl text-espresso">Spa dashboard</p>
           <div className="flex items-center gap-1">
-            <Link to="/" target="_blank" className="hidden rounded-full px-3 py-2 text-sm text-muted hover:text-forest sm:inline-flex sm:items-center sm:gap-1">
+            <Link to="/" target="_blank" className="hidden rounded-full px-3 py-2 text-sm text-muted hover:text-espresso sm:inline-flex sm:items-center sm:gap-1">
               View site <ExternalLink className="h-3.5 w-3.5" aria-hidden />
             </Link>
             <span className="hidden text-xs text-muted md:inline">{user.email}</span>
-            <button type="button" className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm text-muted hover:text-forest" onClick={() => signOut(auth!)}>
+            <button type="button" className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm text-muted hover:text-espresso" onClick={() => signOut(auth!)}>
               <LogOut className="h-4 w-4" aria-hidden /> Sign out
             </button>
           </div>
@@ -109,7 +109,7 @@ export function Dashboard({ user }: { user: User }) {
               key={label}
               to={to}
               end={end}
-              className={({ isActive }) => `inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm ${isActive ? 'bg-forest text-white' : 'text-muted hover:bg-sand'}`}
+              className={({ isActive }) => `inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm ${isActive ? 'bg-espresso text-white' : 'text-muted hover:bg-sand'}`}
             >
               <Icon className="h-4 w-4" aria-hidden /> {label}
             </NavLink>

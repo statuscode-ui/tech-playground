@@ -1,10 +1,10 @@
-import { MapPin, Menu, Phone, Sparkles, X } from 'lucide-react';
+import { CalendarDays, ChevronRight, MapPin, Menu, Phone, Sparkles, X } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, TikTokIcon, WhatsAppIcon } from './BrandIcons';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useSiteData } from '../data/SiteData';
 import { generalEnquiryMessage, whatsappUrl } from '../lib/whatsapp';
-import { ErrorBanner } from './ui';
+import { ErrorBanner, WhatsAppLink } from './ui';
 
 const ChatWidget = lazy(() => import('./ChatWidget'));
 
@@ -22,8 +22,8 @@ function Logo() {
   const [first, ...rest] = settings.spaName.split(' ');
   return (
     <span className="flex flex-col leading-none">
-      <span className="font-display text-2xl tracking-wide text-forest">{first}</span>
-      {rest.length > 0 && <span className="text-[0.65rem] tracking-[0.3em] text-[#8a6d37] uppercase">{rest.join(' ')}</span>}
+      <span className="font-display text-2xl tracking-wide text-espresso">{first}</span>
+      {rest.length > 0 && <span className="text-[0.65rem] tracking-[0.3em] text-bronze uppercase">{rest.join(' ')}</span>}
     </span>
   );
 }
@@ -31,18 +31,18 @@ function Logo() {
 function Header() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
-  const { promotions } = useSiteData();
+  const { promotions, settings } = useSiteData();
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `rounded-full px-3 py-2 text-sm tracking-wide transition ${isActive ? 'text-forest font-medium' : 'text-muted hover:text-forest'}`;
+    `rounded-full px-3 py-2 text-sm tracking-wide transition ${isActive ? 'text-espresso font-medium' : 'text-muted hover:text-espresso'}`;
 
   return (
     <>
       {promotions[0] && (
-        <div className="bg-forest text-center text-sm text-white">
+        <div className="bg-espresso text-center text-sm text-white">
           <p className="container-page flex items-center justify-center gap-2 py-2">
             <Sparkles className="h-4 w-4 text-gold-soft" aria-hidden />
             <span>
@@ -52,8 +52,9 @@ function Header() {
           </p>
         </div>
       )}
-      <header className="sticky top-0 z-40 border-b border-linen/60 bg-cream/90 backdrop-blur">
-        <div className="container-page flex h-16 items-center justify-between">
+      {/* Floating pill header */}
+      <header className="sticky top-3 z-40 px-3 sm:top-4">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 rounded-full bg-ivory/95 pr-2 pl-5 shadow-[0_8px_30px_-12px_rgba(46,36,32,0.35)] ring-1 ring-linen/70 backdrop-blur sm:pl-7">
           <Link to="/" aria-label="Home">
             <Logo />
           </Link>
@@ -64,29 +65,35 @@ function Header() {
               </NavLink>
             ))}
           </nav>
-          <Link to="/treatments" className="btn-primary hidden md:inline-flex">
-            Book a treatment
-          </Link>
-          <button
-            type="button"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-forest md:hidden"
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            onClick={() => setOpen((o) => !o)}
-          >
-            {open ? <X aria-hidden /> : <Menu aria-hidden />}
-            <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
-          </button>
+          <div className="flex items-center gap-1">
+            <WhatsAppLink message={generalEnquiryMessage(settings.spaName, 'booking an appointment')} className="btn-whatsapp min-h-12 px-5" icon={<CalendarDays className="h-4 w-4" aria-hidden />}>
+              Book
+            </WhatsAppLink>
+            <button
+              type="button"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-espresso md:hidden"
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              onClick={() => setOpen((o) => !o)}
+            >
+              {open ? <X aria-hidden /> : <Menu aria-hidden />}
+              <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
+            </button>
+          </div>
         </div>
         {open && (
-          <nav id="mobile-nav" aria-label="Main" className="border-t border-linen/60 bg-cream md:hidden">
-            <div className="container-page flex flex-col py-3">
-              {NAV.map((n) => (
-                <NavLink key={n.to} to={n.to} end={n.to === '/'} className={({ isActive }) => `rounded-xl px-3 py-3 ${isActive ? 'bg-sand text-forest' : 'text-ink'}`}>
-                  {n.label}
-                </NavLink>
-              ))}
-            </div>
+          <nav id="mobile-nav" aria-label="Main" className="mx-auto mt-2 max-w-6xl rounded-3xl bg-ivory p-3 shadow-xl ring-1 ring-linen/70 md:hidden">
+            {NAV.map((n) => (
+              <NavLink
+                key={n.to}
+                to={n.to}
+                end={n.to === '/'}
+                className={({ isActive }) => `label-caps flex items-center justify-between rounded-2xl px-4 py-3.5 ${isActive ? 'bg-espresso text-white' : 'text-espresso'}`}
+              >
+                {n.label}
+                <ChevronRight className="h-4 w-4" aria-hidden />
+              </NavLink>
+            ))}
           </nav>
         )}
       </header>
@@ -104,7 +111,7 @@ function Footer() {
   ].filter((s) => s.href);
 
   return (
-    <footer className="mt-24 bg-forest-dark text-white/80">
+    <footer className="mt-24 bg-espresso-dark text-white/80">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
           <p className="font-display text-3xl text-white">{settings.spaName}</p>
@@ -168,20 +175,32 @@ function Footer() {
   );
 }
 
-function WhatsAppFab() {
+function BookingBar() {
   const { settings } = useSiteData();
-  const href = whatsappUrl(settings.whatsappNumber, generalEnquiryMessage(settings.spaName));
-  if (!href) return null;
+  const booking = whatsappUrl(settings.whatsappNumber, generalEnquiryMessage(settings.spaName, 'booking an appointment'));
+  const chat = whatsappUrl(settings.whatsappNumber, generalEnquiryMessage(settings.spaName));
+  if (!booking) return null;
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="fixed right-4 bottom-4 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#1f7a4d] text-white shadow-lg ring-4 ring-white/70 transition hover:scale-105 sm:right-6 sm:bottom-6"
-    >
-      <WhatsAppIcon className="h-7 w-7" />
-      <span className="sr-only">Chat with us on WhatsApp (opens WhatsApp)</span>
-    </a>
+    <>
+      {/* Phones: full-width booking bar fixed to the bottom of the screen. */}
+      <div className="fixed inset-x-0 bottom-0 z-40 bg-espresso-dark/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+        <a href={booking} target="_blank" rel="noopener noreferrer" className="btn-gold min-h-13 w-full text-base">
+          <CalendarDays className="h-5 w-5" aria-hidden />
+          Book Appointment
+          <span className="sr-only"> (opens WhatsApp)</span>
+        </a>
+      </div>
+      {/* Larger screens: round WhatsApp button. */}
+      <a
+        href={chat}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed right-6 bottom-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#1f7a4d] text-white shadow-lg ring-4 ring-white/70 transition hover:scale-105 md:inline-flex"
+      >
+        <WhatsAppIcon className="h-7 w-7" />
+        <span className="sr-only">Chat with us on WhatsApp (opens WhatsApp)</span>
+      </a>
+    </>
   );
 }
 
@@ -195,8 +214,9 @@ export default function Layout() {
   }, [pathname]);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-forest focus:px-4 focus:py-2 focus:text-white">
+    // Bottom padding on phones keeps the footer clear of the fixed booking bar.
+    <div className="flex min-h-screen flex-col pb-20 md:pb-0">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-espresso focus:px-4 focus:py-2 focus:text-white">
         Skip to content
       </a>
       <Header />
@@ -205,7 +225,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
-      <WhatsAppFab />
+      <BookingBar />
       <Suspense fallback={null}>
         <ChatWidget />
       </Suspense>

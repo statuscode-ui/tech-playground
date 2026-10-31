@@ -95,7 +95,7 @@ export function ProductDetail() {
 
   return (
     <article className="container-page py-10 sm:py-14">
-      <Link to="/products" className="inline-flex items-center gap-1 text-sm text-muted hover:text-forest">
+      <Link to="/products" className="inline-flex items-center gap-1 text-sm text-muted hover:text-espresso">
         <ArrowLeft className="h-4 w-4" aria-hidden /> All products
       </Link>
       <div className="mt-6 grid gap-10 md:grid-cols-2">
@@ -107,7 +107,7 @@ export function ProductDetail() {
           {product.size && <p className="mt-2 text-muted">{product.size}</p>}
           <div className="mt-4 flex items-center gap-3 text-xl">
             <Price price={product.price} promoPrice={product.promoPrice} />
-            <span className="badge bg-sage-soft text-forest">{STOCK_LABELS[product.stockStatus]}</span>
+            <span className="badge bg-almond text-espresso">{STOCK_LABELS[product.stockStatus]}</span>
           </div>
           <p className="mt-5 leading-relaxed whitespace-pre-line text-muted">{product.description}</p>
           <div className="mt-6">
