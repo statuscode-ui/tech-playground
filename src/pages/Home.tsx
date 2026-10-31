@@ -1,7 +1,7 @@
 import { ArrowRight, House, Leaf, MapPin, Quote, Sparkles, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { InstagramIcon } from '../components/BrandIcons';
-import { ProductCard, ServiceCard } from '../components/Cards';
+import { CategoryTile, ProductCard, SignatureCard } from '../components/Cards';
 import HeroBackdrop from '../components/HeroBackdrop';
 import { FaqList } from './Faq';
 import { BookingNote, LoadingState, SectionHeading, SpaImage, WhatsAppLink } from '../components/ui';
@@ -16,12 +16,18 @@ export default function Home() {
   const featuredServices = (services.filter((s) => s.featured).length ? services.filter((s) => s.featured) : services).slice(0, 3);
   const featuredProducts = products.filter((p) => p.featured).slice(0, 4);
   const gallery = services.filter((s) => s.imageUrl).slice(0, 4);
+  // One tile per category, using the first photo found in that category.
+  const categories = [...new Set(services.map((s) => s.category).filter(Boolean))].map((category) => {
+    const inCat = services.filter((s) => s.category === category);
+    const withImage = inCat.find((s) => s.imageUrl);
+    return { category, imageUrl: withImage?.imageUrl ?? '', imageAlt: withImage?.imageAlt ?? '', count: inCat.length };
+  });
 
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-sand via-cream to-sage-soft/60" aria-hidden />
+      <section className="under-header relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-sand via-cream to-almond/60" aria-hidden />
         <div className="container-page relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:py-24">
           <div className="fade-up relative isolate">
             <HeroBackdrop />
@@ -46,9 +52,9 @@ export default function Home() {
             />
             {settings.homeServiceEnabled && (
               <div className="absolute -bottom-5 -left-3 flex items-center gap-3 rounded-2xl bg-ivory/95 px-4 py-3 shadow-lg ring-1 ring-linen sm:-left-8">
-                <House className="h-5 w-5 text-forest" aria-hidden />
+                <House className="h-5 w-5 text-espresso" aria-hidden />
                 <p className="text-sm">
-                  <span className="block font-medium text-forest">Home service available</span>
+                  <span className="block font-medium text-espresso">Home service available</span>
                   <span className="text-muted">We can come to you</span>
                 </p>
               </div>
@@ -66,14 +72,51 @@ export default function Home() {
           <div className="grid gap-4 md:grid-cols-2">
             {promotions.map((p) => (
               <div key={p.id} className="card flex items-start gap-4 border-gold/40 bg-gradient-to-br from-ivory to-gold-soft/40 p-6">
-                <Sparkles className="mt-1 h-6 w-6 shrink-0 text-[#8a6d37]" aria-hidden />
+                <Sparkles className="mt-1 h-6 w-6 shrink-0 text-gold" aria-hidden />
                 <div>
-                  <p className="font-display text-2xl text-forest">{p.title}</p>
+                  <p className="font-display text-2xl text-espresso">{p.title}</p>
                   <p className="mt-1 text-sm text-muted">{p.description}</p>
                   {p.endDate && <p className="mt-2 text-xs text-muted">Offer ends {new Date(p.endDate + 'T00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</p>}
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Treatment categories: photo tiles with dark label bars */}
+      <section className="container-page mt-20">
+        <SectionHeading eyebrow="Our menu" title="Explore our treatments" />
+        {loading ? (
+          <LoadingState />
+        ) : (
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+            {categories.map((c) => (
+              <CategoryTile key={c.category} {...c} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Signature treatments */}
+      {featuredServices.length > 0 && (
+        <section className="mt-24 bg-sand/70 py-20">
+          <div className="container-page">
+            <SectionHeading
+              eyebrow="Signature treatments"
+              title="Our signature treatments"
+              intro="Treatments to melt away stress and leave you restored. Choose one and send us your preferred date and time on WhatsApp."
+            />
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {featuredServices.map((s) => (
+                <SignatureCard key={s.id} service={s} badge="Signature" />
+              ))}
+            </div>
+            <div className="mt-10 text-center">
+              <Link to="/treatments" className="btn-outline">
+                See all treatments <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+            </div>
           </div>
         </section>
       )}
@@ -85,25 +128,6 @@ export default function Home() {
           <SectionHeading align="left" eyebrow="Our mission" title="A haven of peace and tranquility" />
           <p className="mt-5 leading-relaxed text-muted">{settings.mission}</p>
           <p className="mt-4 leading-relaxed text-muted">{settings.story}</p>
-        </div>
-      </section>
-
-      {/* Featured treatments */}
-      <section className="container-page mt-24">
-        <SectionHeading eyebrow="Treatments" title="Our signature treatments" intro="Choose a treatment and send us a WhatsApp message with your preferred date and time." />
-        {loading ? (
-          <LoadingState />
-        ) : (
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredServices.map((s) => (
-              <ServiceCard key={s.id} service={s} />
-            ))}
-          </div>
-        )}
-        <div className="mt-10 text-center">
-          <Link to="/treatments" className="btn-outline">
-            See all treatments <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
         </div>
       </section>
 
@@ -122,7 +146,7 @@ export default function Home() {
               },
             ].map(({ Icon, title, text }) => (
               <div key={title} className="rounded-2xl bg-ivory/80 p-7 text-center">
-                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sage-soft text-forest">
+                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-almond text-espresso">
                   <Icon className="h-5 w-5" aria-hidden />
                 </span>
                 <h3 className="mt-4 text-2xl">{title}</h3>
@@ -212,13 +236,13 @@ export default function Home() {
 
       {/* Visit */}
       <section className="container-page mt-24">
-        <div className="card grid gap-8 bg-forest p-8 text-white sm:p-12 md:grid-cols-2">
+        <div className="card grid gap-8 bg-espresso p-8 text-white sm:p-12 md:grid-cols-2">
           <div>
             <p className="text-xs font-medium tracking-[0.22em] text-gold-soft uppercase">Visit us</p>
             <h2 className="mt-3 text-4xl text-white">Ready to unwind?</h2>
             <p className="mt-4 text-white/80">Message us on WhatsApp to book your treatment, or ask us anything.</p>
             <div className="mt-6">
-              <WhatsAppLink message={generalEnquiryMessage(settings.spaName, 'booking an appointment')} className="btn bg-white text-forest hover:bg-cream">
+              <WhatsAppLink message={generalEnquiryMessage(settings.spaName, 'booking an appointment')} className="btn bg-white text-espresso hover:bg-cream">
                 Book on WhatsApp
               </WhatsAppLink>
             </div>

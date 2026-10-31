@@ -32,12 +32,12 @@ export default function HeroBackdrop() {
     // The hero <section> already clips anything that drifts past the page edge.
     <div aria-hidden className="pointer-events-none absolute -inset-x-6 -inset-y-10 -z-10 sm:-inset-x-10">
       {/* Soft glowing orbs */}
-      <div className="hero-orb hero-orb-a absolute -top-10 -left-16 h-72 w-72 rounded-full bg-sage/35 blur-3xl" />
+      <div className="hero-orb hero-orb-a absolute -top-10 -left-16 h-72 w-72 rounded-full bg-taupe/35 blur-3xl" />
       <div className="hero-orb hero-orb-b absolute top-1/3 right-0 h-64 w-64 rounded-full bg-gold-soft/70 blur-3xl" />
-      <div className="hero-orb hero-orb-c absolute -bottom-12 left-1/4 h-56 w-56 rounded-full bg-sage-soft/80 blur-3xl" />
+      <div className="hero-orb hero-orb-c absolute -bottom-12 left-1/4 h-56 w-56 rounded-full bg-almond/80 blur-3xl" />
 
       {/* Swaying botanical line art */}
-      <Sprig className="hero-sway absolute -top-2 right-2 h-48 w-28 text-sage/45 sm:right-10 sm:h-60 sm:w-36" />
+      <Sprig className="hero-sway absolute -top-2 right-2 h-48 w-28 text-taupe/45 sm:right-10 sm:h-60 sm:w-36" />
       <Sprig mirrored className="hero-sway-slow absolute -bottom-6 -left-4 hidden h-40 w-24 text-gold/35 sm:block" />
 
       {/* Petals drifting upward */}

@@ -1,4 +1,4 @@
-import { Clock } from 'lucide-react';
+import { CalendarDays, ChevronRight, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSiteData } from '../data/SiteData';
 import { formatDuration, startingPrice } from '../lib/format';
@@ -62,10 +62,10 @@ export function ServiceCard({ service }: { service: Service }) {
 }
 
 const stockStyles: Record<string, string> = {
-  in_stock: 'bg-sage-soft text-forest',
-  low_stock: 'bg-gold-soft text-[#6b5223]',
+  in_stock: 'bg-almond text-espresso',
+  low_stock: 'bg-gold-soft text-espresso',
   out_of_stock: 'bg-sand text-muted',
-  preorder: 'bg-sand text-forest',
+  preorder: 'bg-sand text-espresso',
 };
 
 export function ProductCard({ product }: { product: Product }) {
@@ -99,6 +99,70 @@ export function ProductCard({ product }: { product: Product }) {
               Ask about restock
             </WhatsAppLink>
           )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/** Photo tile with a dark label bar, linking to the treatments list filtered to one category. */
+export function CategoryTile({ category, imageUrl, imageAlt, count }: { category: string; imageUrl: string; imageAlt: string; count: number }) {
+  return (
+    <Link
+      to={`/treatments?category=${encodeURIComponent(category)}`}
+      className="group block overflow-hidden rounded-2xl bg-espresso shadow-[0_10px_30px_-18px_rgba(46,36,32,0.6)] transition hover:-translate-y-0.5"
+    >
+      <SpaImage src={imageUrl} alt={imageAlt} className="aspect-square w-full transition duration-500 group-hover:scale-[1.04]" />
+      <span className="label-caps flex items-center justify-between gap-2 px-4 py-4 text-white sm:px-5">
+        <span className="truncate">{category}</span>
+        <ChevronRight className="h-4 w-4 shrink-0 transition group-hover:translate-x-0.5" aria-hidden />
+      </span>
+      <span className="sr-only">
+        {count} treatment{count === 1 ? '' : 's'}
+      </span>
+    </Link>
+  );
+}
+
+/** Large feature card for the home page "Signature treatments" section. */
+export function SignatureCard({ service, badge }: { service: Service; badge: string }) {
+  const { settings } = useSiteData();
+  const from = startingPrice(service.options);
+  const single = service.options.length === 1 ? service.options[0] : undefined;
+  return (
+    <article className="flex flex-col overflow-hidden rounded-[1.75rem] bg-ivory shadow-[0_18px_40px_-24px_rgba(46,36,32,0.55)] ring-1 ring-linen/70">
+      <div className="relative">
+        <SpaImage src={service.imageUrl} alt={service.imageAlt} className="aspect-[4/3] w-full rounded-b-[1.75rem]" />
+        <span className="label-caps absolute top-4 left-4 rounded-full bg-espresso px-4 py-2 text-xs text-white">{badge}</span>
+      </div>
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="label-caps text-base text-espresso">{service.name}</h3>
+        <p className="mt-3 line-clamp-3 leading-relaxed text-muted">{service.description}</p>
+        <p className="mt-4">
+          {single ? (
+            <Price price={single.price} promoPrice={single.promoPrice} />
+          ) : from != null ? (
+            <>
+              <span className="text-muted">From </span>
+              <Price price={from} promoPrice={null} />
+            </>
+          ) : (
+            <Price price={null} promoPrice={null} />
+          )}
+        </p>
+        <div className="mt-auto flex flex-wrap gap-2 pt-5">
+          {service.available && (
+            <WhatsAppLink
+              message={serviceBookingMessage(settings.spaName, service, single, settings.currencySymbol)}
+              className="btn-whatsapp flex-1"
+              icon={<CalendarDays className="h-4 w-4" aria-hidden />}
+            >
+              Book now
+            </WhatsAppLink>
+          )}
+          <Link to={`/treatments/${service.slug}`} className="btn-outline">
+            Details<span className="sr-only"> about {service.name}</span>
+          </Link>
         </div>
       </div>
     </article>

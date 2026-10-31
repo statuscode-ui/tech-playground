@@ -107,9 +107,9 @@ export default function Overview() {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         {stats
           ? tiles.map((t) => (
-              <Link key={t.label} to={t.to} className="card p-4 hover:border-forest/30">
+              <Link key={t.label} to={t.to} className="card p-4 hover:border-espresso/30">
                 <p className="text-xs text-muted">{t.label}</p>
-                <p className="mt-1 font-display text-3xl text-forest">{t.value}</p>
+                <p className="mt-1 font-display text-3xl text-espresso">{t.value}</p>
               </Link>
             ))
           : Array.from({ length: 6 }, (_, i) => <div key={i} className="card h-20 animate-pulse bg-sand/50" />)}
@@ -124,7 +124,7 @@ export default function Overview() {
           </button>
         </div>
       )}
-      {importMsg && <p role="status" className="rounded-xl bg-sage-soft px-4 py-2 text-sm text-forest">{importMsg}</p>}
+      {importMsg && <p role="status" className="rounded-xl bg-almond px-4 py-2 text-sm text-espresso">{importMsg}</p>}
 
       <div className="card p-6 text-sm">
         <h3 className="text-2xl">Website features</h3>
